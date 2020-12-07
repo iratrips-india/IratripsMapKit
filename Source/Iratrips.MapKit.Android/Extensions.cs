@@ -36,19 +36,19 @@ namespace Iratrips.MapKit.Droid
             return new LatLng(self.Latitude, self.Longitude);
         }
         /// <summary>
-        /// Convert <see cref="IMRouteTravelMode"/> to <see cref="GmsDirectionTravelMode"/>
+        /// Convert <see cref="MKRouteTravelMode"/> to <see cref="GmsDirectionTravelMode"/>
         /// </summary>
         /// <param name="self">Self instance</param>
         /// <returns>Gms Direction API travel mode</returns>
-        public static GmsDirectionTravelMode ToGmsTravelMode(this IMRouteTravelMode self)
+        public static GmsDirectionTravelMode ToGmsTravelMode(this MKRouteTravelMode self)
         {
             switch (self)
             {
-                case IMRouteTravelMode.Driving:
+                case MKRouteTravelMode.Driving:
                     return GmsDirectionTravelMode.Driving;
-                case IMRouteTravelMode.Walking:
+                case MKRouteTravelMode.Walking:
                     return GmsDirectionTravelMode.Walking;
-                case IMRouteTravelMode.Any:
+                case MKRouteTravelMode.Any:
                     return GmsDirectionTravelMode.Driving;
                 default:
                     return GmsDirectionTravelMode.Driving;

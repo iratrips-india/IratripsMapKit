@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Iratrips.MapKit.Example.Pages.SamplePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:tk="clr-namespace:TK.CustomMap;assembly=TK.CustomMap"
+    Title="TKCustomMap">
+
+    <!--<RelativeLayout x:Name="_baseLayout" VerticalOptions="FillAndExpand" />-->
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding AddRouteCommand}" Text="Add Route">
+            <ToolbarItem.Icon>
+                <OnPlatform
+                    x:TypeArguments="FileImageSource"
+                    Android="ic_directions_white_24dp.png"
+                    iOS="ic_directions.png" />
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Command="{Binding ClearMapCommand}" Text="Clear" />
+        <ToolbarItem Command="{Binding ShowListCommand}" Text="List" />
+        <ToolbarItem Command="{Binding RunSimulationCommand}" Text="Start Test" />
+    </ContentPage.ToolbarItems>
+</ContentPage>

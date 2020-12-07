@@ -10,15 +10,15 @@ namespace Iratrips.MapKit.Api.Google
     /// </summary>
     public sealed class GmsPlace
     {
-         static string _apiKey;
+        static string _apiKey;
 
-         static GmsPlace _instance;
+        static GmsPlace _instance;
 
-         readonly HttpClient _httpClient;
+        readonly HttpClient _httpClient;
 
-         const string BaseUrl = "https://maps.googleapis.com/maps/api/";
-         const string UrlPredictions = "place/autocomplete/json"; // ?input=SEARCHTEXT&key=API_KEY
-         const string UrlDetails = "place/details/json";
+        const string BaseUrl = "https://maps.googleapis.com/maps/api/";
+        const string UrlPredictions = "place/autocomplete/json"; // ?input=SEARCHTEXT&key=API_KEY
+        const string UrlDetails = "place/details/json";
 
         /// <summary>
         /// Google Maps Place API instance
@@ -30,7 +30,7 @@ namespace Iratrips.MapKit.Api.Google
         /// <summary>
         /// Creates a new instance of <see cref="GmsPlace"/> 
         /// </summary>
-         GmsPlace() 
+        GmsPlace()
         {
             if (_apiKey == null) throw new InvalidOperationException("NO API KEY PROVIDED");
 
@@ -58,7 +58,8 @@ namespace Iratrips.MapKit.Api.Google
 
             if (result.IsSuccessStatusCode)
             {
-                var placeResult = JsonConvert.DeserializeObject<GmsPlaceResult>(await result.Content.ReadAsStringAsync());
+                var json = await result.Content.ReadAsStringAsync();
+                var placeResult = JsonConvert.DeserializeObject<GmsPlaceResult>(json);
                 placeResult.SearchTerm = searchText;
                 return placeResult;
             }
@@ -86,7 +87,7 @@ namespace Iratrips.MapKit.Api.Google
         /// </summary>
         /// <param name="searchText">The search text</param>
         /// <returns>The Query string</returns>
-         string BuildQueryPredictions(string searchText)
+        string BuildQueryPredictions(string searchText)
         {
             return string.Format("{0}?input={1}&key={2}", UrlPredictions, searchText, _apiKey);
         }
@@ -95,7 +96,7 @@ namespace Iratrips.MapKit.Api.Google
         /// </summary>
         /// <param name="placeId">The google place id</param>
         /// <returns>The Query string</returns>
-         string BuildQueryDetails(string placeId)
+        string BuildQueryDetails(string placeId)
         {
             return string.Format("{0}?placeid={1}&key={2}", UrlDetails, placeId, _apiKey);
         }

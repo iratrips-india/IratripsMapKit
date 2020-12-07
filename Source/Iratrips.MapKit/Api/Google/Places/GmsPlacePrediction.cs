@@ -9,12 +9,16 @@ namespace Iratrips.MapKit.Api.Google
     {
         [JsonProperty("description")]
         public string Description { get; set; }
+        
         [JsonProperty("id")]
         public string Id { get; set; }
+        
         [JsonProperty("place_id")]
         public string PlaceId { get; set; }
+        
         [JsonProperty("reference")]
         public string Reference { get; set; }
+        
         ///<inheritdoc />
         public string Subtitle { get; set; }
     }

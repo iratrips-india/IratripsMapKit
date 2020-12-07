@@ -3,14 +3,14 @@
 namespace Iratrips.MapKit.Models
 {
     /// <summary>
-    /// Holds the <see cref="IMRoute"/> and the error message of the calculation failure
+    /// Holds the <see cref="MKRoute"/> and the error message of the calculation failure
     /// </summary>
     public class RouteCalculationError
     {
         /// <summary>
         /// Gets the route
         /// </summary>
-        public IMRoute Route { get;  set; }
+        public MKRoute Route { get;  set; }
         /// <summary>
         /// Gets the error message
         /// </summary>
@@ -20,7 +20,7 @@ namespace Iratrips.MapKit.Models
         /// </summary>
         /// <param name="route">The route</param>
         /// <param name="errorMessage">The error message</param>
-        public RouteCalculationError(IMRoute route, string errorMessage)
+        public RouteCalculationError(MKRoute route, string errorMessage)
         {
             Route = route;
             ErrorMessage = errorMessage;

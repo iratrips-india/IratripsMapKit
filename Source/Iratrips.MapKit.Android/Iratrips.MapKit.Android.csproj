@@ -10,14 +10,14 @@
     <TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Iratrips.MapKit.Android</RootNamespace>
-    <AssemblyName>Iratrips.MapKit.Android</AssemblyName>
+    <RootNamespace>Iratrips.MapKit.Droid</RootNamespace>
+    <AssemblyName>Iratrips.MapKit.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <Deterministic>True</Deterministic>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -51,11 +51,11 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IMCustomMapRenderer.cs" />
-    <Compile Include="IMCustomTileProvider.cs" />
-    <Compile Include="IMGoogleMaps.cs" />
-    <Compile Include="IMMarker.cs" />
-    <Compile Include="IMMarkerRenderer.cs" />
+    <Compile Include="MKCustomMapRenderer.cs" />
+    <Compile Include="MKCustomTileProvider.cs" />
+    <Compile Include="MKGoogleMaps.cs" />
+    <Compile Include="MKMarker.cs" />
+    <Compile Include="MKMarkerRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

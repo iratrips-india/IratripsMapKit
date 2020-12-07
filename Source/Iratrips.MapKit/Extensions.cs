@@ -72,20 +72,20 @@ namespace Iratrips.MapKit
         }
 
         /// <summary>
-        /// Gets the area of a <see cref="IMPolygon"/> in  m^2
+        /// Gets the area of a <see cref="MKPolygon"/> in  m^2
         /// </summary>
         /// <param name="polygon">The polygon to calculate</param>
         /// <returns>returns the area of a polygon in m^2</returns>
-        public static double GetAreaInSquareMeters(this IMPolygon polygon) => 
+        public static double GetAreaInSquareMeters(this MKPolygon polygon) => 
             GetArea(polygon);
 
         /// <summary>
-        /// Gets the area of a <see cref="IMPolygon"/> (defaults  to  m^2)
+        /// Gets the area of a <see cref="MKPolygon"/> (defaults  to  m^2)
         /// </summary>
         /// <param name="polygon">The polygon to calculate</param>
         /// <param name="radius">The radius used in the calculation. Defaults to WGS 84. https://en.wikipedia.org/wiki/World_Geodetic_System</param>
         /// <returns>returns the area of a polygon</returns>
-        public static double GetArea(this IMPolygon polygon, double radius = wgs84RADIUS)
+        public static double GetArea(this MKPolygon polygon, double radius = wgs84RADIUS)
         {
             var coordinates = polygon.Coordinates.EnsureCorrectWinding();
             var size = coordinates.Count;
@@ -158,12 +158,12 @@ namespace Iratrips.MapKit
         }
         
         /// <summary>
-        /// Determines if a <see cref="Position"/> is inside a <see cref="IMPolygon"/> 
+        /// Determines if a <see cref="Position"/> is inside a <see cref="MKPolygon"/> 
         /// </summary>
         /// <param name="polygon">The Polygon to check</param>
         /// <param name="position">The Position to calculate</param>
         /// <returns><c>true</c> if the Position is inside the Polygon, otherwise <c>false</c></returns>
-        public static bool Contains(this IMPolygon polygon, Position position)
+        public static bool Contains(this MKPolygon polygon, Position position)
         {
             var coordinates = polygon.Coordinates;
             

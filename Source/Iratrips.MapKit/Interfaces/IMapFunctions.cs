@@ -17,12 +17,12 @@ namespace Iratrips.MapKit.Interfaces
         /// Raises the pin selected event and command
         /// </summary>
         /// <param name="pin">The selected pin</param>
-        void RaisePinSelected(IMCustomMapPin pin);
+        void RaisePinSelected(MKCustomMapPin pin);
         /// <summary>
         /// Raises the pin drag end event and command
         /// </summary>
         /// <param name="pin">The pin which got dragged</param>
-        void RaisePinDragEnd(IMCustomMapPin pin);
+        void RaisePinDragEnd(MKCustomMapPin pin);
         /// <summary>
         /// Raises the map clicked event and command
         /// </summary>
@@ -42,12 +42,12 @@ namespace Iratrips.MapKit.Interfaces
         /// Raises the route clicked event and command
         /// </summary>
         /// <param name="route">The route which got tapped</param>
-        void RaiseRouteClicked(IMRoute route);
+        void RaiseRouteClicked(MKRoute route);
         /// <summary>
         /// Raises the route calculation finished event and command
         /// </summary>
         /// <param name="route">The route</param>
-        void RaiseRouteCalculationFinished(IMRoute route);
+        void RaiseRouteCalculationFinished(MKRoute route);
         /// <summary>
         /// Raises the route calculation failed event and command
         /// </summary>
@@ -60,7 +60,7 @@ namespace Iratrips.MapKit.Interfaces
         /// <summary>
         /// Raises the callout clicked event and command
         /// </summary>
-        void RaiseCalloutClicked(IMCustomMapPin pin);
+        void RaiseCalloutClicked(MKCustomMapPin pin);
         /// <summary>
         /// Raises the map ready event and command
         /// </summary>
