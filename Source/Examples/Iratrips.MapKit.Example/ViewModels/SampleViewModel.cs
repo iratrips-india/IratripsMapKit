@@ -303,15 +303,6 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Function which prepare sample callout view. 
-        /// </summary>
-        /// <param name="pin"></param>
-        /// <returns></returns>
-        public SampleCallout GenerateCalloutView(MKCallout callout) {
-            return new SampleCallout(callout);
-        }
-
-        /// <summary>
         /// Map region bound to <see cref="TKCustomMap"/>
         /// </summary>
         public MapSpan MapRegion
@@ -465,8 +456,6 @@ namespace Iratrips.MapKit.Example
                                 Title = string.Format("Pin {0}, {1}", position.Latitude, position.Longitude),
                                 Subtitle = "Click for more info...",
                                 IsClickable = false,
-                                ViewProvider = this.GenerateCalloutView,
-                                Size = new Size(200, 100)
                             },
 
                             IsDraggable = true
@@ -678,6 +667,11 @@ namespace Iratrips.MapKit.Example
                 });
             }
         }
+
+        public Func<MKCustomMapPin, Xamarin.Forms.View> GetCalloutView => (pin) =>
+        {
+            return new SampleCallout(pin);
+        };
 
         public Func<string, IEnumerable<MKCustomMapPin>, MKCustomMapPin> GetClusteredPin => (group, clusteredPins) =>
         {

@@ -227,6 +227,13 @@ namespace Iratrips.MapKit
             typeof(ICommand),
             typeof(MKCustomMap));
         /// <summary>
+        /// Bindable Property of <see cref="GetCalloutView"/>
+        /// </summary>
+        public static readonly BindableProperty GetCalloutViewProperty = BindableProperty.Create(
+            nameof(GetCalloutView),
+            typeof(Func<MKCustomMapPin, Xamarin.Forms.View>),
+            typeof(MKCustomMap));
+        /// <summary>
         /// Bindable Property of <see cref="GetClusteredPin"/>
         /// </summary>
         public static readonly BindableProperty GetClusteredPinProperty = BindableProperty.Create(
@@ -494,6 +501,14 @@ namespace Iratrips.MapKit
         {
             get => (bool)GetValue(ShowTrafficProperty);
             set => SetValue(ShowTrafficProperty, value);
+        }
+        /// <summary>
+        /// Gets/Sets function to retrieve a callout view. 
+        /// </summary>
+        public Func<MKCustomMapPin, Xamarin.Forms.View> GetCalloutView
+        {
+            get => (Func<MKCustomMapPin, Xamarin.Forms.View>)GetValue(GetCalloutViewProperty);
+            set => SetValue(GetCalloutViewProperty, value);
         }
         /// <summary>
         /// Gets/Sets function to retrieve a pin for clustering. You receive the group name and all pins getting clustered. 

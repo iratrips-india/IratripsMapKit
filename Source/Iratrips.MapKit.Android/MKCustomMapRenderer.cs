@@ -1487,17 +1487,17 @@ namespace Iratrips.MapKit.Droid
             var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
             if (inflater != null && FormsMap.SelectedPin != null)
             {
-                if (FormsMap.SelectedPin.Callout == null || FormsMap.SelectedPin.Callout.ViewProvider == null) return null;
+                if (FormsMap.SelectedPin.Callout == null || FormsMap.GetCalloutView == null) return null;
 
-                Xamarin.Forms.View xfView = FormsMap.SelectedPin.Callout.ViewProvider?.Invoke(FormsMap.SelectedPin.Callout);
+                Xamarin.Forms.View xfView = FormsMap.GetCalloutView?.Invoke(FormsMap.SelectedPin);
 
                 var renderer = Xamarin.Forms.Platform.Android.Platform.CreateRendererWithContext(xfView, this.Context);
                 var nativeView = renderer.View;
                 renderer.Tracker.UpdateLayout();
-                xfView.Layout(new Xamarin.Forms.Rectangle(0, 0, this.Context.ToPixels(FormsMap.SelectedPin.Callout.Size.Width), this.Context.ToPixels(FormsMap.SelectedPin.Callout.Size.Height)));
+                xfView.Layout(new Xamarin.Forms.Rectangle(0, 0, this.Context.ToPixels(xfView.WidthRequest), this.Context.ToPixels(xfView.HeightRequest)));
 
                 LinearLayout layout = new LinearLayout(this.Context);
-                layout.LayoutParameters = new LayoutParams((int)this.Context.ToPixels(FormsMap.SelectedPin.Callout.Size.Width), (int)this.Context.ToPixels(FormsMap.SelectedPin.Callout.Size.Height));
+                layout.LayoutParameters = new LayoutParams((int)this.Context.ToPixels(xfView.WidthRequest), (int)this.Context.ToPixels(xfView.HeightRequest));
                 layout.AddView(nativeView);
 
                 return layout;

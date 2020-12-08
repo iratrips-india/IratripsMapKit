@@ -21,6 +21,7 @@ namespace Iratrips.MapKit.Example.Pages
             var mapView = new MKCustomMap(MapSpan.FromCenterAndRadius(newYork, Distance.FromKilometers(2)));
             mapView.SetBinding(MKCustomMap.IsClusteringEnabledProperty, "IsClusteringEnabled");
             mapView.SetBinding(MKCustomMap.GetClusteredPinProperty, "GetClusteredPin");
+            mapView.SetBinding(MKCustomMap.GetCalloutViewProperty, "GetCalloutView");
             mapView.SetBinding(MKCustomMap.PinsProperty, "Pins");
             mapView.SetBinding(MKCustomMap.MapClickedCommandProperty, "MapClickedCommand");
             mapView.SetBinding(MKCustomMap.MapLongPressCommandProperty, "MapLongPressCommand");

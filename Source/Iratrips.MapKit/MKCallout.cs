@@ -9,8 +9,6 @@ namespace Iratrips.MapKit
     /// </summary>
     public class MKCallout : MKBase
     {
-        Func<MKCallout, Xamarin.Forms.View> _viewProvider;
-        Xamarin.Forms.Size _size;
         string _title;
         string _subtitle;
         bool _isClickable;
@@ -40,23 +38,6 @@ namespace Iratrips.MapKit
         {
             get { return _isClickable; }
             set { SetField(ref _isClickable, value); }
-        }
-
-        /// <summary>
-        /// Gets/Sets UI view of the Pin's callout 
-        /// </summary>
-        public Func<MKCallout, Xamarin.Forms.View> ViewProvider
-        {
-            get { return _viewProvider; }
-            set { SetField(ref _viewProvider, value); }
-        }
-        /// <summary>
-        /// Gets/Sets the exact size of the callout view.
-        /// </summary>
-        public Xamarin.Forms.Size Size
-        {
-            get { return _size; }
-            set { SetField(ref _size, value); }
         }
     }
 }
