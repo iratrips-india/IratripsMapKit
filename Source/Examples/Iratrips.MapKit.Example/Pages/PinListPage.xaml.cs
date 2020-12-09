@@ -1,13 +1,9 @@
-﻿using Iratrips.MapKit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
-namespace TK.CustomMap.Sample.Pages
+namespace Iratrips.MapKit.Example.Pages
 {
     public partial class PinListPage : ContentPage
     {

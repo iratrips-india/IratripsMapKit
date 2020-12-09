@@ -12,11 +12,11 @@ namespace Iratrips.MapKit
     public class GenericEventArgs<T> : EventArgs
     {
         /// <summary>
-        /// Gets the value of the <see cref="TKGenericEventArgs"/>
+        /// Gets the value of the <see cref="GenericEventArgs"/>
         /// </summary>
         public T Value { get;  set; }
         /// <summary>
-        /// Creates a new instance of <see cref="TKGenericEventArgs"/>
+        /// Creates a new instance of <see cref=" GenericEventArgs"/>
         /// </summary>
         /// <param name="value">The value</param>
         public GenericEventArgs(T value)

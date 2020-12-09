@@ -11,6 +11,9 @@ namespace Iratrips.MapKit.Example.Callouts
     {
         public SampleCallout(MKCustomMapPin pin)
         {
+            WidthRequest = 200;
+            HeightRequest = 100;
+
             Content = new StackLayout
             {
                 BackgroundColor = Color.DarkKhaki,

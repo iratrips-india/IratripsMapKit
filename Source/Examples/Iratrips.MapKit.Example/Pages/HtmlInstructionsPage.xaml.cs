@@ -1,5 +1,4 @@
 ﻿using Iratrips.MapKit.Overlays;
-using TK.CustomMap.Sample;
 using Xamarin.Forms;
 
 namespace Iratrips.MapKit.Example.Pages

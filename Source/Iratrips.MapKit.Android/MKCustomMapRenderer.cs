@@ -81,7 +81,7 @@ namespace Iratrips.MapKit.Droid
         /// <inheritdoc />
         protected override void OnElementChanged(ElementChangedEventArgs<MKCustomMap> e)
         {
-            if (!MKGoogleMaps.IsInitialized) throw new Exception("Call TKGoogleMaps.Init first");
+            if (!MKGoogleMaps.IsInitialized) throw new Exception("Call MKGoogleMaps.Init first");
 
             var oldMapView = Control;
             var mapView = new MapView(Context);
@@ -1284,7 +1284,6 @@ namespace Iratrips.MapKit.Droid
         void UpdateIsShowingUser()
         {
             if (FormsMap == null || _googleMap == null) return;
-
             Map.MyLocationEnabled = Map.UiSettings.MyLocationButtonEnabled = FormsMap.IsShowingUser;
         }
         /// <summary>
@@ -1485,7 +1484,7 @@ namespace Iratrips.MapKit.Droid
         public Android.Views.View GetInfoContents(Marker baseMarker)
         {
             var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
-            if (inflater != null && FormsMap.SelectedPin != null)
+            if (inflater != null && FormsMap.SelectedPin != null && FormsMap.SelectedPin.Callout != null && FormsMap.SelectedPin.Callout.HasCustomView)
             {
                 if (FormsMap.SelectedPin.Callout == null || FormsMap.GetCalloutView == null) return null;
 

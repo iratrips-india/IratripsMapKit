@@ -1,16 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TK.CustomMap.Sample.Pages.PinListPage">
-  <ListView
-    x:Name="_lvPins"
-    ItemsSource="{Binding}">
+<ContentPage
+    x:Class="Iratrips.MapKit.Example.Pages.PinListPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ListView x:Name="_lvPins" ItemsSource="{Binding}">
 
-    <ListView.ItemTemplate>
-      <DataTemplate>
-        <TextCell Text="{Binding Title}" Detail="{Binding Subtitle}" />
-      </DataTemplate>
-    </ListView.ItemTemplate>
-    
-  </ListView>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextCell Detail="{Binding Subtitle}" Text="{Binding Title}" />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+
+    </ListView>
 </ContentPage>

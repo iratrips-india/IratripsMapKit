@@ -2,7 +2,6 @@
 using Iratrips.MapKit.Example;
 using Iratrips.MapKit.Overlays;
 using System.Collections.ObjectModel;
-using TK.CustomMap.Sample;
 using Xamarin.Forms;
 
 namespace Iratrips.MapKit.Example.Pages

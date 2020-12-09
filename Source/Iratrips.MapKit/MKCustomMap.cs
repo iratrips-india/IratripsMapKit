@@ -527,7 +527,7 @@ namespace Iratrips.MapKit
             set => SetValue(IsClusteringEnabledProperty, value);
         }
         /// <summary>
-        /// Creates a new instance of <c>TKCustomMap</c>
+        /// Creates a new instance of <c>MKCustomMap</c>
         /// </summary>
         public MKCustomMap() 
             : base() 
@@ -535,7 +535,7 @@ namespace Iratrips.MapKit
             MapRegion = MapSpan.FromCenterAndRadius(new Position(40.7142700, -74.0059700), Distance.FromKilometers(2));
         }
         /// <summary>
-        /// Creates a new instance of <c>TKCustomMap</c>
+        /// Creates a new instance of <c>MKCustomMap</c>
         /// </summary>
         /// <param name="region">The initial region of the map</param>
         public MKCustomMap(MapSpan region)

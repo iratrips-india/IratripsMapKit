@@ -13,7 +13,7 @@ namespace Iratrips.MapKit.Overlays
         private float _strokeWidth;
 
         /// <summary>
-        ///     Creates a new instance of <c>TKPolygon</c>
+        ///     Creates a new instance of <c>MKPolygon</c>
         /// </summary>
         public MKPolygon()
         {

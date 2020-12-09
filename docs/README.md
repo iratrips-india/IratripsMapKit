@@ -1,5 +1,5 @@
 
-
+# Forked of https://github.com/TorbenK/TK.CustomMap 
 
 # Getting started
 
@@ -22,9 +22,6 @@ Following permissions should be added to your `AndroidManifest.xml`
 
 If you plan to use the automatic route calculation, a valid key for the [Google Maps Directions API](https://developers.google.com/maps/documentation/directions/) is required. You can set it up anywhere in your PCL, simply call `GmsDirection.Init("YOUR API KEY");`.
 
-If you plan to use the `NativePlacesApi` make sure you have a valid key for the [Google Places API](https://developers.google.com/places/) and set the key in your `AndroidManifest.xml`. Replace the following line
-
-
 ```XML
 <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="YOUR API KEY" />
 ``` 
@@ -36,7 +33,7 @@ with
 ```
 Make sure you call 
 ```CSharp 
-TKGoogleMaps.Init(this, bundle); 
+MKGoogleMaps.Init(this, bundle); 
 ```    
 
 <br />
@@ -45,12 +42,12 @@ TKGoogleMaps.Init(this, bundle);
 
 Include namespace in your XAML file:
 ```XML
-<ContentPage xmlns:tk="clr-namespace:TK.CustomMap;assembly=TK.CustomMap" />
+<ContentPage xmlns:mk="clr-namespace:Iratrips.MapKit;assembly=Iratrips.MapKit" />
 ```
 
 Setup map:
 ```XML
-<tk:TKCustomMap MapRegion="{Binding MapRegion}"
+<mk:MKCustomMap MapRegion="{Binding MapRegion}"
                 IsShowingUser="{Binding IsShowingUser}"
                 IsClusteringEnabled="{Binding IsClusteringEnabled}"
                 Pins="{Binding Pins}"

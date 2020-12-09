@@ -11,8 +11,6 @@ using Iratrips.MapKit.Example.Callouts;
 using Iratrips.MapKit.Example.Pages;
 using Iratrips.MapKit.Interfaces;
 using Iratrips.MapKit.Overlays;
-using TK.CustomMap.Sample;
-using TK.CustomMap.Sample.Pages;
 using Xamarin.Forms;
 
 namespace Iratrips.MapKit.Example
@@ -38,9 +36,9 @@ namespace Iratrips.MapKit.Example
             get
             {
                 return _tileUrlOptions;
-                //return new TKTileUrlOptions(
+                //return new MKTileUrlOptions(
                 //    "http://a.basemaps.cartocdn.com/dark_all/{2}/{0}/{1}.png", 256, 256, 0, 18);
-                //return new TKTileUrlOptions(
+                //return new MKTileUrlOptions(
                 //    "http://a.tile.openstreetmap.org/{2}/{0}/{1}.png", 256, 256, 0, 18);
             }
             set
@@ -303,7 +301,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Map region bound to <see cref="TKCustomMap"/>
+        /// Map region bound to <see cref="MKCustomMap"/>
         /// </summary>
         public MapSpan MapRegion
         {
@@ -319,7 +317,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Pins bound to the <see cref="TKCustomMap"/>
+        /// Pins bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public ObservableCollection<MKCustomMapPin> Pins
         {
@@ -335,7 +333,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Routes bound to the <see cref="TKCustomMap"/>
+        /// Routes bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public ObservableCollection<MKRoute> Routes
         {
@@ -351,7 +349,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Circles bound to the <see cref="TKCustomMap"/>
+        /// Circles bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public ObservableCollection<MKCircle> Circles
         {
@@ -367,7 +365,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Lines bound to the <see cref="TKCustomMap"/>
+        /// Lines bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public ObservableCollection<MKPolyline> Lines
         {
@@ -383,7 +381,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Polygons bound to the <see cref="TKCustomMap"/>
+        /// Polygons bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public ObservableCollection<MKPolygon> Polygons
         {
@@ -399,7 +397,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Map center bound to the <see cref="TKCustomMap"/>
+        /// Map center bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Position MapCenter
         {
@@ -415,7 +413,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Selected pin bound to the <see cref="TKCustomMap"/>
+        /// Selected pin bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public MKCustomMapPin SelectedPin
         {
@@ -431,7 +429,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Map Long Press bound to the <see cref="TKCustomMap"/>
+        /// Map Long Press bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Command<Position> MapLongPressCommand
         {
@@ -455,9 +453,9 @@ namespace Iratrips.MapKit.Example
                             {
                                 Title = string.Format("Pin {0}, {1}", position.Latitude, position.Longitude),
                                 Subtitle = "Click for more info...",
-                                IsClickable = false,
+                                HasCustomView = true,
+                                IsClickable = false
                             },
-
                             IsDraggable = true
                         };
                         _pins.Add(pin);
@@ -477,7 +475,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Map Clicked bound to the <see cref="TKCustomMap"/>
+        /// Map Clicked bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Command<Position> MapClickedCommand
         {
@@ -601,7 +599,7 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
-        /// Callout clicked bound to the <see cref="TKCustomMap"/>
+        /// Callout clicked bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Command CalloutClickedCommand
         {
@@ -676,7 +674,7 @@ namespace Iratrips.MapKit.Example
         public Func<string, IEnumerable<MKCustomMapPin>, MKCustomMapPin> GetClusteredPin => (group, clusteredPins) =>
         {
             return null;
-            //return new TKCustomMapPin
+            //return new MKCustomMapPin
             //{
             //    DefaultPinColor = Color.Blue,
             //    Title = clusteredPins.Count().ToString(),

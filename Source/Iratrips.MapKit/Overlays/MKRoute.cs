@@ -41,7 +41,7 @@
             set { SetField(ref _lineWidth, value); }
         }
         /// <summary>
-        /// Gets/Sets if a route is selectable. If this is <value>false</value> <see cref="TK.CustomMap.TKCustomMap.RouteClickedCommand"/> will not get raised for this route
+        /// Gets/Sets if a route is selectable. If this is <value>false</value> <see cref="Iratrips.MapKit.MKCustomMap.RouteClickedCommand"/> will not get raised for this route
         /// </summary>
         public bool Selectable
         {

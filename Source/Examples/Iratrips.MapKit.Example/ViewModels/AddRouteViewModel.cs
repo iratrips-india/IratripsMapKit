@@ -10,7 +10,7 @@ using Iratrips.MapKit.Api.Google;
 using Iratrips.MapKit.Overlays;
 using Xamarin.Forms;
 
-namespace TK.CustomMap.Sample
+namespace Iratrips.MapKit.Example
 {
     public class AddRouteViewModel
     {

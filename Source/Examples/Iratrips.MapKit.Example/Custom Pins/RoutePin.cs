@@ -1,12 +1,6 @@
-﻿using Iratrips.MapKit;
-using Iratrips.MapKit.Overlays;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Iratrips.MapKit.Overlays;
 
-namespace TK.CustomMap.Sample
+namespace Iratrips.MapKit
 {
     /// <summary>
     /// Pin which is either source or destination of a route
