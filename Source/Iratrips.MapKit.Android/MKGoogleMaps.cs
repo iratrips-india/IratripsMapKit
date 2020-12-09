@@ -44,6 +44,8 @@ namespace Iratrips.MapKit.Droid
                     Console.WriteLine("Exception: {0}", e);
                 }
             }
+            else
+                Console.WriteLine("Google Play Services Not available");
         }
     }
 }

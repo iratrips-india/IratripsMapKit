@@ -2,14 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.3">
     <id>Iratrips.MapKit</id>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
     <title>Rich and bindable Map control for Xamarin.Forms</title>
     <authors>Iratrips</authors>
     <owners>Iratrips</owners>
     <licenseUrl>https://github.com/iratrips-india/IratripsMapKit/blob/Development/License.md</licenseUrl>
-    <license type="file"></license>
     <projectUrl>https://github.com/iratrips-india/IratripsMapKit</projectUrl>
-    <!--<iconUrl>https://www.nuget.org/Content/Images/packageDefaultIcon.png</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Iratrips.MapKit lets you customize pins, add overlays, calculate routes, search place predictions, cluster pins and more!
@@ -18,18 +16,20 @@
     <summary>Rich and bindable Map control for Xamarin.Forms</summary>
     <tags>xamarin, map, xamarin.forms, xamarin.forms.maps, extended map, custom map</tags>
     <dependencies>
-      <group targetFramework="netstandard1.1">
+      <group targetFramework="netstandard2.0">
         <dependency id="NETStandard.Library" version="2.0.3" />
         <dependency id="Newtonsoft.Json" version="12.0.3" />
         <dependency id="Xamarin.Forms" version="4.8.0.1687" />
         <dependency id="Xamarin.Forms.Maps" version="4.8.0.1687" />
       </group>
-      <group targetFramework="MonoAndroid70">
+      <group targetFramework="MonoAndroid10">
         <dependency id="SushiHangover.Android.Maps.Utils" version="0.1.3" />
         <dependency id="Xamarin.Android.Support.v7.AppCompat" version="28.0.0.3" />
+        <dependency id="Xamarin.Forms" version="4.8.0.1687" />
         <dependency id="Xamarin.Forms.Maps" version="4.8.0.1687" />
         <dependency id="Xamarin.GooglePlayServices.Location" version="117.0.0" />
         <dependency id="Xamarin.GooglePlayServices.Places" version="117.0.0" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" />
       </group>
       <!--<group targetFramework="Xamarin.iOS10">
         <dependency id="Xamarin.iOS.ClusterKit" version="0.3.1.1" />
@@ -41,13 +41,11 @@
     </dependencies>
   </metadata>
   <files>
-    <!--Core-->
+    <!--Cross-Platform-->
     <file src="..\Source\Iratrips.MapKit\bin\Release\netstandard2.0\Iratrips.MapKit.dll" target="lib\netstandard2.0" />
-    <file src="..\Source\Iratrips.MapKit\bin\Release\netstandard2.0\Iratrips.MapKit.deps.json" target="lib\netstandard2.0" />
-
+    
     <!--Xamarin.Android-->
     <file src="..\Source\Iratrips.MapKit.Android\bin\Release\Iratrips.MapKit.Droid.dll" target="lib\MonoAndroid10" />
     <file src="..\Source\Iratrips.MapKit\bin\Release\netstandard2.0\Iratrips.MapKit.dll" target="lib\MonoAndroid10" />
-    <file src="..\Source\Iratrips.MapKit\bin\Release\netstandard2.0\Iratrips.MapKit.deps.json" target="lib\MonoAndroid10" />
   </files>
 </package>
