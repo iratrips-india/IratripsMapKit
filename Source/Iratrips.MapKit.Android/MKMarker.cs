@@ -141,10 +141,12 @@ namespace Iratrips.MapKit.Droid
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                Android.Util.Log.Error("MapKit", ex.Message + "\n\n" + ex.StackTrace);
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
+
             Marker.SetIcon(bitmap);
         }
         /// <summary>
@@ -174,8 +176,9 @@ namespace Iratrips.MapKit.Droid
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                Android.Util.Log.Error("MapKit", ex.Message + "\n\n" + ex.StackTrace);
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
             markerOptions.SetIcon(bitmap);

@@ -456,6 +456,7 @@ namespace Iratrips.MapKit.Example
                                 HasCustomView = true,
                                 IsClickable = false
                             },
+                            Image = ImageSource.FromUri(new Uri("https://menglish.sakshi.com/sites/default/files/styles/storypage_main/public/gallery_images/2020/06/8/bollywood%20heroin%20shraddha%20kapoor%20exclusive%20photo%20gallery_3-1591612945.jpg?itok=igMbZdoH")),
                             IsDraggable = true
                         };
                         _pins.Add(pin);

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.iratrips.mapkit.example">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
 	<application android:label="Iratrips.MapKit.Example.Android" android:theme="@style/MainTheme">
-    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB2TsPJc-AIdR3VEmJr515E2M6SD-v60ZE" />
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAeQUFd_NSAa7OrrNvVqz6XDTTXe2zrQe8" />
   </application>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

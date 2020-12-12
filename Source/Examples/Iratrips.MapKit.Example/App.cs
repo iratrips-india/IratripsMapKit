@@ -9,8 +9,8 @@ namespace Iratrips.MapKit.Example
     {
         public App()
         {
-            GmsPlace.Init("AIzaSyBp908tB_kf_8fZMtqRR6vLPjSovvNfzDg");
-            GmsDirection.Init("AIzaSyBp908tB_kf_8fZMtqRR6vLPjSovvNfzDg");
+            GmsPlace.Init("AIzaSyAeQUFd_NSAa7OrrNvVqz6XDTTXe2zrQe8");
+            GmsDirection.Init("AIzaSyAeQUFd_NSAa7OrrNvVqz6XDTTXe2zrQe8");
 
             // The root page of your application
             var mainPage = new NavigationPage(new SamplePage());
