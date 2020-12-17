@@ -53,6 +53,7 @@ namespace Iratrips.MapKit
 
         /// <summary>
         /// Gets/Sets the image of the pin. If null the default is used
+        /// UriImageSource is not supported.
         /// </summary>
         public ImageSource Image
         {

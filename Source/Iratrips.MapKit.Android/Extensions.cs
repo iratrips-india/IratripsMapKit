@@ -60,20 +60,19 @@ namespace Iratrips.MapKit.Droid
         /// <param name="source">Self instance</param>
         /// <param name="context">Android Context</param>
         /// <returns>The Bitmap</returns>
-        public static async Task<Bitmap> ToBitmap(this ImageSource source, Context context)
+        public static Bitmap ToBitmap(this ImageSource source, Context context)
         {
             if (source is FileImageSource)
             {
-                return await new FileImageSourceHandler().LoadImageAsync(source, context);
+                return new FileImageSourceHandler().LoadImageAsync(source, context).GetAwaiter().GetResult();
             }
-            if (source is UriImageSource)
+            else if (source is StreamImageSource)
             {
-                return await new ImageLoaderSourceHandler().LoadImageAsync(source, context);
+                return new StreamImagesourceHandler().LoadImageAsync(source, context).GetAwaiter().GetResult();
             }
-            if (source is StreamImageSource)
-            {
-                return await new StreamImagesourceHandler().LoadImageAsync(source, context);
-            }
+            
+            //if (source is UriImageSource) Not Supported
+
             return null;
         }
         /// <summary>

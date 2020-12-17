@@ -23,6 +23,7 @@ using Android.OS;
 using Android.Content;
 using Android.Gms.Clustering;
 using Android.Widget;
+using Android.Gms.Clustering.Algo;
 
 [assembly: ExportRenderer(typeof(MKCustomMap), typeof(MKCustomMapRenderer))]
 namespace Iratrips.MapKit.Droid
@@ -565,7 +566,7 @@ namespace Iratrips.MapKit.Droid
         /// Adds a marker to the map
         /// </summary>
         /// <param name="pin">The Forms Pin</param>
-        async void AddPin(MKCustomMapPin pin)
+        void AddPin(MKCustomMapPin pin)
         {
             if (_markers.Keys.Contains(pin)) return;
 
@@ -573,7 +574,7 @@ namespace Iratrips.MapKit.Droid
 
             var tkMarker = new MKMarker(pin, Context);
             var markerWithIcon = new MarkerOptions();
-            await tkMarker.InitializeMarkerOptionsAsync(markerWithIcon);
+            tkMarker.InitializeMarkerOptions(markerWithIcon);
 
             _markers.Add(pin, tkMarker);
 
@@ -1118,14 +1119,14 @@ namespace Iratrips.MapKit.Droid
         /// </summary>
         /// <param name="pin">The forms pin</param>
         /// <param name="markerOptions">The native marker options</param>
-        async Task UpdateImage(MKCustomMapPin pin, MarkerOptions markerOptions)
+        Task UpdateImage(MKCustomMapPin pin, MarkerOptions markerOptions)
         {
             BitmapDescriptor bitmap;
             try
             {
                 if (pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(await pin.Image.ToBitmap(Context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToBitmap(Context));
                 }
                 else
                 {
@@ -1144,21 +1145,23 @@ namespace Iratrips.MapKit.Droid
             {
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
+            
             markerOptions.SetIcon(bitmap);
+            return Task.CompletedTask;
         }
         /// <summary>
         /// Updates the image on a marker
         /// </summary>
         /// <param name="pin">The forms pin</param>
         /// <param name="marker">The native marker</param>
-        async Task UpdateImage(MKCustomMapPin pin, Marker marker)
+        Task UpdateImage(MKCustomMapPin pin, Marker marker)
         {
             BitmapDescriptor bitmap;
             try
             {
                 if (pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(await pin.Image.ToBitmap(Context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToBitmap(Context));
                 }
                 else
                 {
@@ -1177,7 +1180,10 @@ namespace Iratrips.MapKit.Droid
             {
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
+
             marker.SetIcon(bitmap);
+            return Task.CompletedTask;
+
         }
         /// <summary>
         /// Updates the custom tile provider 

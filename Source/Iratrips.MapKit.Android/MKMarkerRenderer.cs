@@ -37,13 +37,13 @@ namespace Iratrips.MapKit.Droid
             _iconGenerator = new IconGenerator(context);
         }
 
-        protected async override void OnBeforeClusterItemRendered(Java.Lang.Object p0, MarkerOptions p1)
+        protected override void OnBeforeClusterItemRendered(Java.Lang.Object p0, MarkerOptions p1)
         {
             var tkMarker = p0 as MKMarker;
 
             if (tkMarker == null) return;
 
-            await tkMarker.InitializeMarkerOptionsAsync(p1);
+            tkMarker.InitializeMarkerOptions(p1);
         }
         protected override void OnClusterItemRendered(Java.Lang.Object p0, Marker p1)
         {
@@ -56,7 +56,7 @@ namespace Iratrips.MapKit.Droid
             tkMarker.Marker = p1;
         }
 
-        protected async override void OnBeforeClusterRendered(ICluster p0, MarkerOptions p1)
+        protected override void OnBeforeClusterRendered(ICluster p0, MarkerOptions p1)
         {
             base.OnBeforeClusterRendered(p0, p1);
 
@@ -69,8 +69,7 @@ namespace Iratrips.MapKit.Droid
             else
             {
                 var tempMarker = new MKMarker(customPin, _context);
-                
-                await tempMarker.InitializeMarkerOptionsAsync(p1, false);
+                tempMarker.InitializeMarkerOptions(p1, false);
             }
         }
 

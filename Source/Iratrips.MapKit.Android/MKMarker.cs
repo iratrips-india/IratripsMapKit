@@ -49,7 +49,7 @@ namespace Iratrips.MapKit.Droid
         /// <param name="e">Event arguments</param>
         /// <param name="isDragging">If the pin is dragging or not</param>
         /// <returns>Task</returns>
-        public async Task HandlePropertyChangedAsync(PropertyChangedEventArgs e, bool isDragging)
+        public Task HandlePropertyChangedAsync(PropertyChangedEventArgs e, bool isDragging)
         {
             switch (e.PropertyName)
             {
@@ -58,10 +58,10 @@ namespace Iratrips.MapKit.Droid
                     Marker.Snippet = Pin.Callout?.Subtitle;
                     break;
                 case nameof(MKCustomMapPin.Image):
-                    await UpdateImageAsync();
+                    UpdateImage();
                     break;
                 case nameof(MKCustomMapPin.DefaultPinColor):
-                    await UpdateImageAsync();
+                    UpdateImage();
                     break;
                 case nameof(MKCustomMapPin.Position):
                     if (!isDragging)
@@ -85,6 +85,8 @@ namespace Iratrips.MapKit.Droid
                     Marker.Rotation = (float)Pin.Rotation;
                     break;
             }
+
+            return Task.CompletedTask;
         }
         /// <summary>
         /// initializes the <see cref="MarkerOptions"/>
@@ -92,7 +94,7 @@ namespace Iratrips.MapKit.Droid
         /// <param name="markerOptions">Instance of the marker options</param>
         /// <param name="setPosition">if <value>true</value>, the position will be updated</param>
         /// <returns><see cref="Task"/></returns>
-        public async Task InitializeMarkerOptionsAsync(MarkerOptions markerOptions, bool setPosition = true)
+        public void InitializeMarkerOptions(MarkerOptions markerOptions, bool setPosition = true)
         {
             if (setPosition)
             {
@@ -105,7 +107,7 @@ namespace Iratrips.MapKit.Droid
             if (Pin.Callout != null && !string.IsNullOrWhiteSpace(Pin.Callout.Subtitle))
                 markerOptions.SetSnippet(Pin.Callout.Subtitle);
 
-            await UpdateImageAsync(markerOptions);
+            UpdateImage(markerOptions);
             markerOptions.Draggable(Pin.IsDraggable);
             markerOptions.Visible(Pin.IsVisible);
             markerOptions.SetRotation((float)Pin.Rotation);
@@ -119,14 +121,14 @@ namespace Iratrips.MapKit.Droid
         /// </summary>
         /// <param name="pin">The forms pin</param>
         /// <param name="markerOptions">The native marker options</param>
-        async Task UpdateImageAsync()
+        void UpdateImage()
         {
             BitmapDescriptor bitmap;
             try
             {
                 if (Pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(await Pin.Image.ToBitmap(_context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToBitmap(_context));
                 }
                 else
                 {
@@ -154,14 +156,14 @@ namespace Iratrips.MapKit.Droid
         /// </summary>
         /// <param name="pin">The forms pin</param>
         /// <param name="markerOptions">The native marker options</param>
-        async Task UpdateImageAsync(MarkerOptions markerOptions)
+        void UpdateImage(MarkerOptions markerOptions)
         {
             BitmapDescriptor bitmap;
             try
             {
                 if (Pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(await Pin.Image.ToBitmap(_context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToBitmap(_context));
                 }
                 else
                 {

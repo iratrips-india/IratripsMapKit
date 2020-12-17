@@ -22,7 +22,7 @@ namespace Iratrips.MapKit.Example
         MapSpan _mapRegion = MapSpan.FromCenterAndRadius(new Position(40.7142700, -74.0059700), Distance.FromKilometers(2));
         Position _mapCenter;
         MKCustomMapPin _selectedPin;
-        bool _isClusteringEnabled;
+        bool _isClusteringEnabled = true;
         ObservableCollection<MKCustomMapPin> _pins;
         ObservableCollection<MKRoute> _routes;
         ObservableCollection<MKCircle> _circles;
@@ -456,7 +456,7 @@ namespace Iratrips.MapKit.Example
                                 HasCustomView = true,
                                 IsClickable = false
                             },
-                            Image = ImageSource.FromUri(new Uri("https://menglish.sakshi.com/sites/default/files/styles/storypage_main/public/gallery_images/2020/06/8/bollywood%20heroin%20shraddha%20kapoor%20exclusive%20photo%20gallery_3-1591612945.jpg?itok=igMbZdoH")),
+                            Image = "ic_place_black_24dp",
                             IsDraggable = true
                         };
                         _pins.Add(pin);
