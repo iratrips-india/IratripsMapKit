@@ -45,6 +45,7 @@ namespace Iratrips.MapKit.Example.Pages
             mapView.SetBinding(MKCustomMap.RouteCalculationFinishedCommandProperty, "RouteCalculationFinishedCommand");
             mapView.SetBinding(MKCustomMap.TilesUrlOptionsProperty, "TilesUrlOptions");
             mapView.SetBinding(MKCustomMap.MapFunctionsProperty, "MapFunctions");
+            mapView.SetBinding(MKCustomMap.CameraIdealCommandProperty, "CameraIdealCommand");
             mapView.IsRegionChangeAnimated = true;
             mapView.IsShowingUser = true;
 

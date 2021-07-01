@@ -65,5 +65,10 @@ namespace Iratrips.MapKit.Interfaces
         /// Raises the map ready event and command
         /// </summary>
         void RaiseMapReady();
+
+        /// <summary>
+        /// Raised when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
+        /// </summary>
+        void RaiseCameraIdeal();
     }
 }

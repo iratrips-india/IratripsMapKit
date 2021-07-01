@@ -257,7 +257,7 @@ namespace Iratrips.MapKit.Droid
                 _googleMap.MarkerDragStart += OnMarkerDragStart;
                 _googleMap.InfoWindowClick += OnInfoWindowClick;
                 _googleMap.MyLocationChange += OnUserLocationChange;
-
+                
                 _googleMap.SetOnCameraIdleListener(this);
                 _googleMap.SetInfoWindowAdapter(this);
 
@@ -1480,6 +1480,8 @@ namespace Iratrips.MapKit.Droid
             {
                 _clusterManager.OnCameraIdle();
             }
+
+            MapFunctions.RaiseCameraIdeal();
         }
 
         public Android.Views.View GetInfoWindow(Marker marker)

@@ -476,6 +476,20 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
+        /// Camera Ideal bound to the <see cref="MKCustomMap"/>
+        /// </summary>
+        public Command CameraIdealCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    Console.WriteLine("Camera is ideal.");
+                });
+            }
+        }
+
+        /// <summary>
         /// Map Clicked bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Command<Position> MapClickedCommand

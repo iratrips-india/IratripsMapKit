@@ -58,11 +58,15 @@ namespace Iratrips.MapKit
         /// Event raised when map is ready
         /// </summary>
         public event EventHandler MapReady;
+        /// <summary>
+        /// Event raised when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
+        /// </summary>
+        public event EventHandler CameraIdeal;
 
         /// <summary>
         /// Property Key for the read-only bindable Property <see cref="MapFunctions"/>
         /// </summary>
-         static readonly BindablePropertyKey MapFunctionsPropertyKey = BindableProperty.CreateReadOnly(
+        static readonly BindablePropertyKey MapFunctionsPropertyKey = BindableProperty.CreateReadOnly(
             nameof(MapFunctions),
             typeof(IRendererFunctions),
             typeof(MKCustomMap),
@@ -288,6 +292,23 @@ namespace Iratrips.MapKit
             typeof(ICommand),
             typeof(MKCustomMap),
             default(ICommand));
+        /// <summary>
+        /// Binadble property of <see cref="MapReadyCommand"/>
+        /// </summary>
+        public static readonly BindableProperty CameraIdealCommandProperty = BindableProperty.Create(
+            nameof(CameraIdealCommand),
+            typeof(ICommand),
+            typeof(MKCustomMap),
+            default(ICommand));
+
+        /// <summary>
+        /// Gets/Sets the command which is raised when the camera is ideal
+        /// </summary>
+        public ICommand CameraIdealCommand
+        {
+            get => (ICommand)GetValue(CameraIdealCommandProperty);
+            set => SetValue(CameraIdealCommandProperty, value);
+        }
 
         /// <summary>
         /// Gets/Sets the command which is raised when the map is ready
@@ -687,12 +708,22 @@ namespace Iratrips.MapKit
             MapReady?.Invoke(this, EventArgs.Empty);
             RaiseCommand(MapReadyCommand, null);
         }
+
+        /// <summary>
+        /// Raises <see cref="CameraIdeal"/>
+        /// </summary>
+        protected void OnCameraIdeal()
+        {
+            CameraIdeal?.Invoke(this, EventArgs.Empty);
+            RaiseCommand(CameraIdealCommand, null);
+        }
+
         /// <summary>
         /// Raises a specific command
         /// </summary>
         /// <param name="command">The command to raise</param>
         /// <param name="parameter">Addition command parameter</param>
-         void RaiseCommand(ICommand command, object parameter)
+        void RaiseCommand(ICommand command, object parameter)
         {
             if(command != null && command.CanExecute(parameter))
             {
@@ -725,5 +756,8 @@ namespace Iratrips.MapKit
         void IMapFunctions.RaiseCalloutClicked(MKCustomMapPin pin) => OnCalloutClicked(pin);
         /// <inheritdoc/>
         void IMapFunctions.RaiseMapReady() => OnMapReady();
+        
+        /// <inheritdoc/>
+        void IMapFunctions.RaiseCameraIdeal() => OnCameraIdeal();
     }
 }
