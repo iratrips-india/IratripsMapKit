@@ -64,6 +64,11 @@ namespace Iratrips.MapKit
         public event EventHandler CameraIdeal;
 
         /// <summary>
+        /// Event raised when the camera starts moving after it has been idle or when the reason for camera motion has changed.
+        /// </summary>
+        public event EventHandler CameraMoveStarted;
+
+        /// <summary>
         /// Property Key for the read-only bindable Property <see cref="MapFunctions"/>
         /// </summary>
         static readonly BindablePropertyKey MapFunctionsPropertyKey = BindableProperty.CreateReadOnly(
@@ -293,10 +298,19 @@ namespace Iratrips.MapKit
             typeof(MKCustomMap),
             default(ICommand));
         /// <summary>
-        /// Binadble property of <see cref="MapReadyCommand"/>
+        /// Binadble property of <see cref="CameraIdealCommand"/>
         /// </summary>
         public static readonly BindableProperty CameraIdealCommandProperty = BindableProperty.Create(
             nameof(CameraIdealCommand),
+            typeof(ICommand),
+            typeof(MKCustomMap),
+            default(ICommand));
+
+        /// <summary>
+        /// Binadble property of <see cref="CameraMoveStartedCommand"/>
+        /// </summary>
+        public static readonly BindableProperty CameraMoveStartedCommandProperty = BindableProperty.Create(
+            nameof(CameraMoveStartedCommand),
             typeof(ICommand),
             typeof(MKCustomMap),
             default(ICommand));
@@ -308,6 +322,15 @@ namespace Iratrips.MapKit
         {
             get => (ICommand)GetValue(CameraIdealCommandProperty);
             set => SetValue(CameraIdealCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Gets/Sets the command which is raised when the camera move started
+        /// </summary>
+        public ICommand CameraMoveStartedCommand
+        {
+            get => (ICommand)GetValue(CameraMoveStartedCommandProperty);
+            set => SetValue(CameraMoveStartedCommandProperty, value);
         }
 
         /// <summary>
@@ -719,6 +742,15 @@ namespace Iratrips.MapKit
         }
 
         /// <summary>
+        /// Raises <see cref="CameraMoveStarted"/>
+        /// </summary>
+        protected void OnCameraMoveStarted()
+        {
+            CameraMoveStarted?.Invoke(this, EventArgs.Empty);
+            RaiseCommand(CameraMoveStartedCommand, null);
+        }
+
+        /// <summary>
         /// Raises a specific command
         /// </summary>
         /// <param name="command">The command to raise</param>
@@ -759,5 +791,9 @@ namespace Iratrips.MapKit
         
         /// <inheritdoc/>
         void IMapFunctions.RaiseCameraIdeal() => OnCameraIdeal();
+
+        /// <inheritdoc/>
+        void IMapFunctions.RaiseCameraMoveStarted() => OnCameraMoveStarted();
+
     }
 }

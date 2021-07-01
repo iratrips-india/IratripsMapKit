@@ -70,5 +70,10 @@ namespace Iratrips.MapKit.Interfaces
         /// Raised when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
         /// </summary>
         void RaiseCameraIdeal();
+
+        /// <summary>
+        /// Raised when the camera starts moving after it has been idle or when the reason for camera motion has changed.
+        /// </summary>
+        void RaiseCameraMoveStarted();
     }
 }

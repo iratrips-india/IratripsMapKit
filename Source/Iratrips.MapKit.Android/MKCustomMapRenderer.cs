@@ -33,7 +33,7 @@ namespace Iratrips.MapKit.Droid
     /// </summary>
     public class MKCustomMapRenderer : ViewRenderer<MKCustomMap, MapView>, IRendererFunctions,
         GoogleMap.ISnapshotReadyCallback, GoogleMap.IOnCameraIdleListener, IOnMapReadyCallback,
-        GoogleMap.IInfoWindowAdapter
+        GoogleMap.IInfoWindowAdapter, GoogleMap.IOnCameraMoveStartedListener
 
     {
         object _lockObj = new object();
@@ -112,6 +112,8 @@ namespace Iratrips.MapKit.Droid
                         _googleMap.InfoWindowClick -= OnInfoWindowClick;
                         _googleMap.MyLocationChange -= OnUserLocationChange;
                         _googleMap.SetOnCameraIdleListener(null);
+                        _googleMap.SetOnCameraMoveStartedListener(null);
+                        _googleMap.SetInfoWindowAdapter(null);
                         _googleMap = null;
                     }
 
@@ -168,7 +170,8 @@ namespace Iratrips.MapKit.Droid
                     _googleMap.InfoWindowClick -= OnInfoWindowClick;
                     _googleMap.MyLocationChange -= OnUserLocationChange;
                     _googleMap.SetOnCameraIdleListener(null);
-
+                    _googleMap.SetOnCameraMoveStartedListener(null);
+                    _googleMap.SetInfoWindowAdapter(null);
                     _clusterManager?.Dispose();
                     _clusterManager = null;
                     _googleMap.Dispose();
@@ -259,6 +262,7 @@ namespace Iratrips.MapKit.Droid
                 _googleMap.MyLocationChange += OnUserLocationChange;
                 
                 _googleMap.SetOnCameraIdleListener(this);
+                _googleMap.SetOnCameraMoveStartedListener(this);
                 _googleMap.SetInfoWindowAdapter(this);
 
                 UpdateTileOptions();
@@ -1482,6 +1486,12 @@ namespace Iratrips.MapKit.Droid
             }
 
             MapFunctions.RaiseCameraIdeal();
+        }
+
+        public void OnCameraMoveStarted(int reason)
+        {
+            if (FormsMap == null) return;
+            MapFunctions.RaiseCameraMoveStarted();
         }
 
         public Android.Views.View GetInfoWindow(Marker marker)

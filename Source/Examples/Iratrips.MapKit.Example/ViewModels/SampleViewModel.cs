@@ -490,6 +490,20 @@ namespace Iratrips.MapKit.Example
         }
 
         /// <summary>
+        /// Camera move bound to the <see cref="MKCustomMap"/>
+        /// </summary>
+        public Command CameraMoveStartedCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    Console.WriteLine("Camera move is started.");
+                });
+            }
+        }
+
+        /// <summary>
         /// Map Clicked bound to the <see cref="MKCustomMap"/>
         /// </summary>
         public Command<Position> MapClickedCommand
