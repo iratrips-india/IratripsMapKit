@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.3">
-    <id>TK.CustomMap</id>
-    <version>3.0.0</version>
+    <id>Iratrips.MapKit</id>
+    <version>1.0.10</version>
     <title>Rich and bindable Map control for Xamarin.Forms</title>
     <authors>Iratrips</authors>
     <owners>Iratrips</owners>
@@ -21,7 +21,7 @@
         <dependency id="Xamarin.Forms" version="5.0.0.2515" />
         <dependency id="Newtonsoft.Json" version="13.0.1" />
       </group>
-      <group targetFramework="MonoAndroid12">
+      <group targetFramework="MonoAndroid13">
         <dependency id="Xamarin.GooglePlayServices.Places" version="117.0.0.7" />
         <dependency id="Xamarin.Google.Maps.Utils" version="1.0.3" />
         <dependency id="Xamarin.Forms" version="5.0.0.2515" />
@@ -38,21 +38,16 @@
     </dependencies>
   </metadata>
   <files>
-    <!--Core-->
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.dll" target="lib\netstandard2.0" />
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.xml" target="lib\netstandard2.0" />
 
     <!--Xamarin.Android-->
-    <file src="..\Source\TK.CustomMap.Android\bin\AppVeyor\TK.CustomMap.Android.dll" target="lib\MonoAndroid10" />
-    <file src="..\Source\TK.CustomMap.Android\bin\AppVeyor\TK.CustomMap.Android.xml" target="lib\MonoAndroid10" />
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.dll" target="lib\MonoAndroid10" />
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.xml" target="lib\MonoAndroid10" />
+    <file src="..\Source\Iratrips.Mapkit.Droid\bin\Release\Iratrips.MapKit.Droid.dll" target="lib\MonoAndroid10" />
+    <file src="..\Source\Iratrips.MapKit\bin\Release\netstandard2.1\Iratrips.MapKit.dll" target="lib\MonoAndroid10" />
 
     <!--Xamarin.iOS Unified-->
-    <file src="..\Source\TK.CustomMap.iOSUnified\bin\AppVeyor\TK.CustomMap.iOSUnified.dll" target="lib\Xamarin.iOS10" />
-    <file src="..\Source\TK.CustomMap.iOSUnified\bin\AppVeyor\TK.CustomMap.iOSUnified.xml" target="lib\Xamarin.iOS10" />
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.dll" target="lib\Xamarin.iOS10" />
-    <file src="..\Source\TK.CustomMap\bin\AppVeyor\netstandard2.0\TK.CustomMap.xml" target="lib\Xamarin.iOS10" />
+    <!-- <file src="..\Source\TK.CustomMap.iOSUnified\bin\Release\TK.CustomMap.iOSUnified.dll" target="lib\Xamarin.iOS10" />
+    <file src="..\Source\TK.CustomMap.iOSUnified\bin\Release\TK.CustomMap.iOSUnified.xml" target="lib\Xamarin.iOS10" />
+    <file src="..\Source\TK.CustomMap\bin\Release\netstandard2.0\TK.CustomMap.dll" target="lib\Xamarin.iOS10" />
+    <file src="..\Source\TK.CustomMap\bin\Release\netstandard2.0\TK.CustomMap.xml" target="lib\Xamarin.iOS10" /> -->
 
     <!--UWP-->
     <!--<file src="TK.CustomMap\TK.CustomMap.UWP\bin\AppVeyor\TK.CustomMap.UWP.dll" target="lib\uap10.0" />

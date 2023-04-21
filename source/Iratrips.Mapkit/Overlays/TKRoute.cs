@@ -1,4 +1,6 @@
-﻿namespace Iratrips.Mapkit.Overlays
+﻿using Iratrips.Mapkit.Api.Google;
+
+namespace Iratrips.Mapkit.Overlays
 {
     /// <summary>
     /// A route to display on the map
@@ -6,16 +8,18 @@
     public class TKRoute : TKOverlay, IRouteFunctions
     {
 
-         Position _source;
-         Position _destination;
-         float _lineWidth;
-         bool _selectAble;
-         TKRouteTravelMode _travelMode;
-         MapSpan _bounds;
-         TKRouteStep[] _steps;
-         double _distance;
-         double _travelTime;
-         bool _isCalculated;
+        Position _source;
+        Position _destination;
+        float _lineWidth;
+        bool _selectAble;
+        TKRouteTravelMode _travelMode;
+        MapSpan _bounds;
+        TKRouteStep[] _steps;
+        double _distance;
+        double _travelTime;
+        bool _isCalculated;
+        GmsRouteResult _providedRouteData;
+
         /// <summary>
         /// Gets/Sets the source of the route
         /// </summary>
@@ -62,7 +66,7 @@
         public MapSpan Bounds
         {
             get { return _bounds; }
-             set { SetField(ref _bounds, value); }
+            set { SetField(ref _bounds, value); }
         }
         /// <summary>
         /// Gets the steps of the route
@@ -70,7 +74,7 @@
         public TKRouteStep[] Steps
         {
             get { return _steps; }
-             set { SetField(ref _steps, value); }
+            set { SetField(ref _steps, value); }
         }
         /// <summary>
         /// Gets the distance of the route in meters
@@ -78,7 +82,7 @@
         public double Distance
         {
             get { return _distance; }
-             set { SetField(ref _distance, value); }
+            set { SetField(ref _distance, value); }
         }
         /// <summary>
         /// Gets the travel time of the route in seconds
@@ -86,13 +90,21 @@
         public double TravelTime
         {
             get { return _travelTime; }
-             set { SetField(ref _travelTime, value); }
+            set { SetField(ref _travelTime, value); }
         }
+        
         public bool IsCalculated
         {
             get { return _isCalculated; }
-             set { SetField(ref _isCalculated, value); }
+            set { SetField(ref _isCalculated, value); }
         }
+
+        public GmsRouteResult ProvidedRouteData
+        {
+            get { return _providedRouteData; }
+            set { SetField(ref _providedRouteData, value); }
+        }
+
         /// <summary>
         /// Creates a new instance of <see cref="TKRoute"/>
         /// </summary>
@@ -102,6 +114,19 @@
             Selectable = true;
             TravelMode = TKRouteTravelMode.Driving;
         }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TKRoute"/>
+        /// </summary>
+        public TKRoute(GmsRouteResult gmsRoute)
+        {
+            LineWidth = 2.5f;
+            Selectable = true;
+            TravelMode = TKRouteTravelMode.Driving;
+            ProvidedRouteData = gmsRoute;
+            IsCalculated = gmsRoute != null;
+        }
+
         ///<inheritdoc/>
         void IRouteFunctions.SetBounds(MapSpan bounds)
         {
@@ -115,7 +140,7 @@
         ///<inheritdoc/>
         void IRouteFunctions.SetTravelTime(double travelTime)
         {
-            TravelTime = travelTime;   
+            TravelTime = travelTime;
         }
         ///<inheritdoc/>
         void IRouteFunctions.SetDistance(double distance)

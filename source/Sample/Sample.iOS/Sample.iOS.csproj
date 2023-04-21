@@ -134,6 +134,8 @@
     <ProjectReference Include="..\..\Iratrips.Mapkit.iOS\Iratrips.Mapkit.iOS.csproj">
       <Project>{3B07CB76-447D-47CD-8791-5FA66FDC45BB}</Project>
       <Name>Iratrips.Mapkit.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

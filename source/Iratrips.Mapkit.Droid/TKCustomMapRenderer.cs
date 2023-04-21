@@ -1029,56 +1029,59 @@ namespace Iratrips.Mapkit.Droid
             GmsDirectionResult routeData = null;
             string errorMessage = null;
 
-            routeData = await GmsDirection.Instance.CalculateRoute(route.Source, route.Destination, route.TravelMode.ToGmsTravelMode());
-
             if (FormsMap == null || Map == null || !_tempRouteList.Contains(route)) return;
 
-            if (routeData != null && routeData.Routes != null)
+            GmsRouteResult r = null;
+
+            if (route.ProvidedRouteData == null)
             {
-                if (routeData.Status == GmsDirectionResultStatus.Ok)
+                routeData = await GmsDirection.Instance.CalculateRoute(route.Source, route.Destination, route.TravelMode.ToGmsTravelMode());
+                if (routeData != null && routeData.Routes != null)
                 {
-                    var r = routeData.Routes.FirstOrDefault();
-                    if (r != null && r.Polyline.Positions != null && r.Polyline.Positions.Any())
-                    {
-                        SetRouteData(route, r);
-
-                        var routeOptions = new PolylineOptions();
-
-                        if (route.Color != Color.Default)
-                        {
-                            routeOptions.InvokeColor(route.Color.ToAndroid().ToArgb());
-                        }
-                        if (route.LineWidth > 0)
-                        {
-                            routeOptions.InvokeWidth(route.LineWidth);
-                        }
-                        routeOptions.Add(r.Polyline.Positions.Select(i => i.ToLatLng()).ToArray());
-
-                        _routes.Add(route, _googleMap.AddPolyline(routeOptions));
-
-                        MapFunctions.RaiseRouteCalculationFinished(route);
-                    }
+                    if (routeData.Status == GmsDirectionResultStatus.Ok)
+                        r = routeData.Routes.FirstOrDefault();
                     else
-                    {
-                        errorMessage = "Unexpected result";
-                    }
+                        errorMessage = routeData.Status.ToString();
                 }
                 else
-                {
-                    errorMessage = routeData.Status.ToString();
-                }
+                    errorMessage = "Could not connect to api";
             }
             else
+                r = route.ProvidedRouteData;
+
+            if (r != null && r.Polyline.Positions != null && r.Polyline.Positions.Any())
             {
-                errorMessage = "Could not connect to api";
+                SetRouteData(route, r);
+
+                var routeOptions = new PolylineOptions();
+
+                if (route.Color != Color.Default)
+                {
+                    routeOptions.InvokeColor(route.Color.ToAndroid().ToArgb());
+                }
+                if (route.LineWidth > 0)
+                {
+                    routeOptions.InvokeWidth(route.LineWidth);
+                }
+                routeOptions.Add(r.Polyline.Positions.Select(i => i.ToLatLng()).ToArray());
+
+                _routes.Add(route, _googleMap.AddPolyline(routeOptions));
+
+                MapFunctions.RaiseRouteCalculationFinished(route);
             }
+            else
+                errorMessage = "Unexpected result";
+    
+
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 var routeCalculationError = new RouteCalculationError(route, errorMessage);
 
                 MapFunctions.RaiseRouteCalculationFailed(routeCalculationError);
             }
+
         }
+
         /// <summary>
         /// Sets the route calculation data
         /// </summary>
