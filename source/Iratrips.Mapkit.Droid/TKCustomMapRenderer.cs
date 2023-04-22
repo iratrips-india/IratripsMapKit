@@ -1063,7 +1063,16 @@ namespace Iratrips.Mapkit.Droid
                 {
                     routeOptions.InvokeWidth(route.LineWidth);
                 }
-                routeOptions.Add(r.Polyline.Positions.Select(i => i.ToLatLng()).ToArray());
+
+                List<LatLng> allPoints = new List<LatLng>();
+                foreach (var leg in r.Legs)
+                {
+                    foreach (var step in leg.Steps)
+                        allPoints.AddRange(step.Polyline.Positions.Select(i => i.ToLatLng()));
+                }
+
+                var pointsArray = allPoints.ToArray();
+                routeOptions.Add(pointsArray);
 
                 _routes.Add(route, _googleMap.AddPolyline(routeOptions));
 
