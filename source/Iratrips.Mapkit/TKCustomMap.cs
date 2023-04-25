@@ -601,12 +601,21 @@ namespace Iratrips.Mapkit
         /// </summary>
         /// <returns>Map as image</returns>
         public async Task<byte[]> GetSnapshot() => await MapFunctions.GetSnapshot();
+
         /// <summary>
         /// Moves the visible region to the specified <see cref="MapSpan"/>
         /// </summary>
         /// <param name="region">Region to move the map to</param>
         /// <param name="animate">If the region change should be animated or not</param>
         public void MoveToMapRegion(MapSpan region, bool animate = false) => MapFunctions.MoveToMapRegion(region, animate);
+
+        /// <summary>
+        /// Rotate the map with the computed bearing for directions
+        /// </summary>
+        /// <param name="last">Last location of the device</param>
+        /// <param name="bearing">New location of the device</param>
+        public void UpdateBearing(Position last, Position current) => MapFunctions.UpdateBearing(last, current);
+
         /// <summary>
         /// Fits the map region to make all given positions visible
         /// </summary>

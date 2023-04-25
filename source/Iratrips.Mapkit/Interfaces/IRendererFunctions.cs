@@ -27,6 +27,12 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="animate">If the region change should be animated or not</param>
         void MoveToMapRegion(MapSpan region, bool animate);
         /// <summary>
+        /// Rotate the map with the computed bearing for directions
+        /// </summary>
+        /// <param name="last">Last location of the device</param>
+        /// <param name="bearing">New location of the device</param>
+        void UpdateBearing(Position last, Position current);
+        /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>
         /// </summary>
         /// <param name="regions">Regions to move the map to</param>

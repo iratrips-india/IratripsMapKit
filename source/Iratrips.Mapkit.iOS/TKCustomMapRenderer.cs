@@ -1834,5 +1834,11 @@ namespace Iratrips.Mapkit.iOS
             FormsMap.IsClusteringEnabled
                 ? Map.ViewForAnnotation(Map.Annotations.GetCluster(annotation))
                 : Map.ViewForAnnotation(annotation);
+
+
+        public void UpdateBearing(Position last, Position current)
+        {
+            //Need to implement
+        }
     }
 }

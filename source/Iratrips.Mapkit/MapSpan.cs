@@ -82,7 +82,7 @@ namespace Iratrips.Mapkit
             double maxDLat = Math.Min(90 - Center.Latitude, 90 + Center.Latitude) * 2;
             return new MapSpan(Center, Math.Min(LatitudeDegrees / zoomFactor, maxDLat), LongitudeDegrees / zoomFactor);
         }
-
+       
         static double DistanceToLatitudeDegrees(Distance distance)
         {
             return distance.Kilometers / EarthCircumferenceKm * 360;

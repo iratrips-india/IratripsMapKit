@@ -23,6 +23,8 @@ using Android.OS;
 using Android.Content;
 using Android.Gms.Maps.Utils.Clustering;
 using Android.Widget;
+using Android.Gms.Maps.Utils;
+using Android.Locations;
 
 [assembly: ExportRenderer(typeof(TKCustomMap), typeof(TKCustomMapRenderer))]
 namespace Iratrips.Mapkit.Droid
@@ -1453,6 +1455,76 @@ namespace Iratrips.Mapkit.Droid
             else
                 _googleMap.MoveCamera(cam);
         }
+
+
+        //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
+        public void UpdateBearing(Position last, Position current)
+        {
+            if (_googleMap == null || !_isInitialized) return;
+
+            LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
+            LatLng newPos = new LatLng(current.Latitude, current.Longitude);
+
+            // ignore very small position deviations (prevents wild swinging)
+            double d = SphericalUtil.ComputeDistanceBetween(oldPos, newPos);
+            if (d < 1)
+                return;
+
+            // compute our own bearing (do not use location bearing)
+            double bearing = SphericalUtil.ComputeHeading(oldPos, newPos);
+
+            //-----------------------------------------------
+            // Next section really only needs to be done once
+
+            // Compute distance of pixels on screen using some desirable "offset"
+
+            Projection p = _googleMap.Projection;
+            var bottomRightPoint = p.ToScreenLocation(p.VisibleRegion.NearRight);
+            var center = new Android.Graphics.Point(bottomRightPoint.X / 2, bottomRightPoint.Y / 2);
+            var offset = new Android.Graphics.Point(center.X, (center.Y + 300));
+
+            LatLng centerLoc = p.FromScreenLocation(center);
+            LatLng offsetNewLoc = p.FromScreenLocation(offset);
+
+            // this computed value only changes on zoom
+            double offsetDistance = SphericalUtil.ComputeDistanceBetween(centerLoc, offsetNewLoc);
+            //-----------------------------------------------
+
+
+            // Compute shadow target position from current position (see diagram)
+            LatLng shadowTgt = SphericalUtil.ComputeOffset(newPos, offsetDistance, bearing);
+
+            //// update circles
+            //if (centerCircle != null)
+            //{
+            //    centerCircle.setCenter(shadowTgt);
+            //}
+            //else
+            //{
+            //    centerCircle = mMap.addCircle(new CircleOptions().strokeColor(Color.BLUE).center(shadowTgt).radius(50));
+            //}
+            //if (carCircle != null)
+            //{
+            //    carCircle.setCenter(newPos);
+            //}
+            //else
+            //{
+            //    carCircle = mMap.addCircle(new CircleOptions().strokeColor(Color.GREEN).center(newPos).radius(50));
+            //}
+
+
+            // update camera
+            var currentPosition = _googleMap.CameraPosition;
+
+            CameraPosition.Builder b = new CameraPosition.Builder();
+            b.Zoom(currentPosition.Zoom);
+            b.Bearing((float)(bearing));
+            b.Target(shadowTgt);
+
+            CameraUpdate cu = CameraUpdateFactory.NewCameraPosition(b.Build());
+            _googleMap.AnimateCamera(cu);
+        }
+
         ///<inheritdoc/>
         public void FitToMapRegions(IEnumerable<MapSpan> regions, bool animate = false, int padding = 0)
         {
@@ -1533,6 +1605,25 @@ namespace Iratrips.Mapkit.Droid
             }
 
             return null;
+        }
+
+        private class OnMoveCameraComplete : Java.Lang.Object, GoogleMap.ICancelableCallback
+        {
+            private readonly Action _completeAction;
+            public OnMoveCameraComplete(Action completeAction)
+            {
+                _completeAction = completeAction;
+            }
+
+            public void OnCancel()
+            {
+                
+            }
+
+            public void OnFinish()
+            {
+                _completeAction?.Invoke();
+            }
         }
     }
 }
