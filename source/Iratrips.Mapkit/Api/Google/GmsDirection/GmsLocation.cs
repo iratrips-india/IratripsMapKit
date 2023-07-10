@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -10,12 +11,12 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Latitude
         /// </summary>
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Latitude { get; set; }
         /// <summary>
         /// Longitude
         /// </summary>
-        [JsonProperty("Lng")]
+        [JsonPropertyName("Lng")]
         public double Longitude { get; set; }
         /// <summary>
         /// Convert to position

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -10,12 +11,12 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Gets the north-east boundary
         /// </summary>
-        [JsonProperty("northeast")]
+        [JsonPropertyName("northeast")]
         public GmsLocation NorthEast { get; set; }
         /// <summary>
         /// Gets the south-west boundary
         /// </summary>
-        [JsonProperty("southwest")]
+        [JsonPropertyName("southwest")]
         public GmsLocation SouthWest { get; set; }
     }
 }

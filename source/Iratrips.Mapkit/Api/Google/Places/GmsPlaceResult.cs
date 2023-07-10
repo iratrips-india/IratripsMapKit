@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -11,7 +11,7 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Predictions received by the Google Place API call
         /// </summary>
-        [JsonProperty("predictions")]
+        [JsonPropertyName("predictions")]
         public IEnumerable<GmsPlacePrediction> Predictions { get; set; }
         /// <summary>
         /// The search term send to the Google Place API

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.OSM
 {
@@ -10,27 +11,27 @@ namespace Iratrips.Mapkit.Api.OSM
         /// <summary>
         /// Gets/Sets the id of the place
         /// </summary>
-        [JsonProperty("place_id")]
+        [JsonPropertyName("place_id")]
         public string PlaceId { get; set; }
         /// <summary>
         /// Gets/Sets the OSM id
         /// </summary>
-        [JsonProperty("osm_id")]
+        [JsonPropertyName("osm_id")]
         public string OsmId { get; set; }
         /// <summary>
         /// Gets/Sets latitude
         /// </summary>
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Latitude { get; set; }
         /// <summary>
         /// Gets/Sets longitude
         /// </summary>
-        [JsonProperty("lon")]
+        [JsonPropertyName("lon")]
         public double Longitude { get; set; }
         /// <summary>
         /// Gets/Sets description
         /// </summary>
-        [JsonProperty("display_name")]
+        [JsonPropertyName("display_name")]
         public string Description { get; set; }
         ///<inheritdoc />
         public string Subtitle { get; set; }

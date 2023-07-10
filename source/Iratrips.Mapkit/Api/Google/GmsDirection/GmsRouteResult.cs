@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -15,7 +15,7 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Gets the polyline
         /// </summary>
-        [JsonProperty("overview_polyline")]
+        [JsonPropertyName("overview_polyline")]
         public GmsPolyline Polyline { get; set; }
         /// <summary>
         /// Get the bounds of the route

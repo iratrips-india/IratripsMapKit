@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -7,16 +8,16 @@ namespace Iratrips.Mapkit.Api.Google
     /// </summary>
     public class GmsPlacePrediction : IPlaceResult
     {
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
         
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
         
-        [JsonProperty("place_id")]
+        [JsonPropertyName("place_id")]
         public string PlaceId { get; set; }
         
-        [JsonProperty("reference")]
+        [JsonPropertyName("reference")]
         public string Reference { get; set; }
         
         ///<inheritdoc />

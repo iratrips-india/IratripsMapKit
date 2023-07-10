@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -59,7 +59,7 @@ namespace Iratrips.Mapkit.Api.Google
             if (result.IsSuccessStatusCode)
             {
                 var json = await result.Content.ReadAsStringAsync();
-                var placeResult = JsonConvert.DeserializeObject<GmsPlaceResult>(json);
+                var placeResult = JsonSerializer.Deserialize<GmsPlaceResult>(json);
                 placeResult.SearchTerm = searchText;
                 return placeResult;
             }
@@ -77,7 +77,7 @@ namespace Iratrips.Mapkit.Api.Google
 
             if (result.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<GmsDetailsResult>(await result.Content.ReadAsStringAsync());
+                return JsonSerializer.Deserialize<GmsDetailsResult>(await result.Content.ReadAsStringAsync());
             }
 
             return null;

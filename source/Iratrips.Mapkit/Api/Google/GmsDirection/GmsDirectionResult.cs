@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -11,7 +11,7 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Status as text
         /// </summary>
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
          string StatusText { get; set; }
         /// <summary>
         /// Gets the result status of the API call

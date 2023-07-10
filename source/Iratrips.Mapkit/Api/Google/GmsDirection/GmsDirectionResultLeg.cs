@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Iratrips.Mapkit.Api.Google
 {
@@ -11,22 +11,22 @@ namespace Iratrips.Mapkit.Api.Google
         /// <summary>
         /// Gets the start address of the leg
         /// </summary>
-        [JsonProperty("start_address")]
+        [JsonPropertyName("start_address")]
         public string StartAddress { get; set; }
         /// <summary>
         /// Gets the end address of the leg
         /// </summary>
-        [JsonProperty("end_address")]
+        [JsonPropertyName("end_address")]
         public string EndAddress { get; set; }
         /// <summary>
         /// Gets the start location of the leg
         /// </summary>
-        [JsonProperty("start_location")]
+        [JsonPropertyName("start_location")]
         public GmsLocation StartLocation { get; set; }
         /// <summary>
         /// Gets the end location of the leg
         /// </summary>
-        [JsonProperty("end_location")]
+        [JsonPropertyName("end_location")]
         public GmsLocation EndLocation { get; set; }
         /// <summary>
         /// Gets the distance of the leg

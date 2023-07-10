@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Iratrips.Mapkit.Api.OSM
 {
@@ -61,7 +61,7 @@ namespace Iratrips.Mapkit.Api.OSM
 
             if (result.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<IEnumerable<OsmNominatimResult>>(await result.Content.ReadAsStringAsync());
+                return JsonSerializer.Deserialize<IEnumerable<OsmNominatimResult>>(await result.Content.ReadAsStringAsync());
             }
             return null;
         }
