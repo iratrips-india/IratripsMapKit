@@ -1836,7 +1836,7 @@ namespace Iratrips.Mapkit.iOS
                 : Map.ViewForAnnotation(annotation);
 
 
-        public void UpdateBearing(Position last, Position current)
+        public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
         {
             //Need to implement
         }

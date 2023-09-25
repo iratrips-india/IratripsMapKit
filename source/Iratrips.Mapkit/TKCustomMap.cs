@@ -614,7 +614,7 @@ namespace Iratrips.Mapkit
         /// </summary>
         /// <param name="last">Last location of the device</param>
         /// <param name="bearing">New location of the device</param>
-        public void UpdateBearing(Position last, Position current) => MapFunctions.UpdateBearing(last, current);
+        public void UpdateBearing(Position last, Position current, Position stepCurrentPos, Position stepNextPos) => MapFunctions.UpdateBearing(last, current, stepCurrentPos, stepNextPos);
 
         /// <summary>
         /// Fits the map region to make all given positions visible

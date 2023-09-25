@@ -1458,12 +1458,15 @@ namespace Iratrips.Mapkit.Droid
 
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
-        public void UpdateBearing(Position last, Position current)
+        public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
         {
             if (_googleMap == null || !_isInitialized) return;
 
             LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
             LatLng newPos = new LatLng(current.Latitude, current.Longitude);
+
+            LatLng stepCurrentPos = new LatLng(stepCurrent.Latitude, stepCurrent.Longitude);
+            LatLng stepNextPos = new LatLng(stepNext.Latitude, stepNext.Longitude);
 
             // ignore very small position deviations (prevents wild swinging)
             double d = SphericalUtil.ComputeDistanceBetween(oldPos, newPos);
@@ -1471,7 +1474,7 @@ namespace Iratrips.Mapkit.Droid
                 return;
 
             // compute our own bearing (do not use location bearing)
-            double bearing = SphericalUtil.ComputeHeading(oldPos, newPos);
+            double bearing = SphericalUtil.ComputeHeading(stepCurrentPos, stepNextPos);
 
             //-----------------------------------------------
             // Next section really only needs to be done once

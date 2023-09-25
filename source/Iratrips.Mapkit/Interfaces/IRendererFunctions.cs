@@ -31,7 +31,9 @@ namespace Iratrips.Mapkit.Interfaces
         /// </summary>
         /// <param name="last">Last location of the device</param>
         /// <param name="bearing">New location of the device</param>
-        void UpdateBearing(Position last, Position current);
+        /// <param name="stepCurrent">Current position on the step</param>
+        /// <param name="stepNext">Next position on the step</param>
+        void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext);
         /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>
         /// </summary>
