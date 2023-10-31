@@ -1666,6 +1666,7 @@ namespace Iratrips.Mapkit.iOS
 
             Map.SetRegion(coordinateRegion, animate);
         }
+
         /// <inheritdoc/>
         public void FitToMapRegions(IEnumerable<MapSpan> regions, bool animate = false, int padding = 0)
         {
@@ -1838,7 +1839,13 @@ namespace Iratrips.Mapkit.iOS
 
         public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
         {
-            //Need to implement
+            throw new NotImplementedException();
         }
+
+        public Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

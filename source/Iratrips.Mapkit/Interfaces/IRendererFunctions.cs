@@ -30,10 +30,21 @@ namespace Iratrips.Mapkit.Interfaces
         /// Rotate the map with the computed bearing for directions
         /// </summary>
         /// <param name="last">Last location of the device</param>
-        /// <param name="bearing">New location of the device</param>
+        /// <param name="current">New location of the device</param>
         /// <param name="stepCurrent">Current position on the step</param>
         /// <param name="stepNext">Next position on the step</param>
         void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext);
+
+
+        /// <summary>
+        /// Returns the snap position which can be use to show current location on the road.
+        /// </summary>
+        /// <param name="nearestPointOnRoute">Last location point on the poly line.</param>
+        /// <param name="nextPointOnRoute">Next location point on the poly line.</param>
+        /// <param name="currentPosition">Current device location</param>
+        Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition);
+
+
         /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>
         /// </summary>

@@ -1456,14 +1456,31 @@ namespace Iratrips.Mapkit.Droid
                 _googleMap.MoveCamera(cam);
         }
 
+        public Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition)
+        {
+            var closestPointLatLng = new LatLng(nearestPointOnRoute.Latitude, nearestPointOnRoute.Longitude);
+            var nextPointLatLng = new LatLng(nextPointOnRoute.Latitude, nextPointOnRoute.Longitude);
+            var positionLatLng = new LatLng(currentPosition.Latitude, currentPosition.Longitude);
+
+            var distance = SphericalUtil.ComputeDistanceBetween(closestPointLatLng, positionLatLng);
+            var heading = SphericalUtil.ComputeHeading(nextPointLatLng, closestPointLatLng);
+
+            var extrapolated = SphericalUtil.ComputeOffset(closestPointLatLng, -1 * distance, heading);
+            return new Position(extrapolated.Latitude, extrapolated.Longitude);
+        }
+
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
         public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
         {
             if (_googleMap == null || !_isInitialized) return;
 
-            LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
             LatLng newPos = new LatLng(current.Latitude, current.Longitude);
+            var onScreen = _googleMap.Projection.VisibleRegion.LatLngBounds.Contains(newPos);
+            if (onScreen)
+                return;
+
+            LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
 
             LatLng stepCurrentPos = new LatLng(stepCurrent.Latitude, stepCurrent.Longitude);
             LatLng stepNextPos = new LatLng(stepNext.Latitude, stepNext.Longitude);
