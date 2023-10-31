@@ -1456,6 +1456,7 @@ namespace Iratrips.Mapkit.Droid
                 _googleMap.MoveCamera(cam);
         }
 
+        //https://stackoverflow.com/questions/65482783/snap-markers-to-nearest-polyline-point-google-maps-flutter/73684671#73684671
         public Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition)
         {
             var closestPointLatLng = new LatLng(nearestPointOnRoute.Latitude, nearestPointOnRoute.Longitude);
