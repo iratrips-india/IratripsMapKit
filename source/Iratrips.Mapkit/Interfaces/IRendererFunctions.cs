@@ -26,14 +26,21 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="region">Region to move the map to</param>
         /// <param name="animate">If the region change should be animated or not</param>
         void MoveToMapRegion(MapSpan region, bool animate);
+
+        /// <summary>
+        /// Return the bearing between two points
+        /// </summary>
+        /// <param name="stepCurrent">Current position on the poly line</param>
+        /// <param name="stepNext">Next position on the poly line</param>
+        double GetBearing(Position stepCurrent, Position stepNext);
+
         /// <summary>
         /// Rotate the map with the computed bearing for directions
         /// </summary>
         /// <param name="last">Last location of the device</param>
         /// <param name="current">New location of the device</param>
-        /// <param name="stepCurrent">Current position on the step</param>
-        /// <param name="stepNext">Next position on the step</param>
-        void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext);
+        /// <param name="bearing">Bearing value computed using GetBearing function.</param>
+        void UpdateBearing(Position last, Position current, double bearing);
 
 
         /// <summary>
@@ -44,6 +51,11 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="currentPosition">Current device location</param>
         Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition);
 
+        /// <summary>
+        /// Returns true if the marker is on screen.
+        /// </summary>
+        /// <param name="current">Current device location</param>
+        bool IsOnScreen(Position current);
 
         /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>

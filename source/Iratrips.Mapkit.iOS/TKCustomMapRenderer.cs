@@ -1837,12 +1837,22 @@ namespace Iratrips.Mapkit.iOS
                 : Map.ViewForAnnotation(annotation);
 
 
-        public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
+        public void UpdateBearing(Position last, Position current, double bearing)
         {
             throw new NotImplementedException();
         }
 
         public Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsOnScreen(Position current)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetBearing(Position stepCurrent, Position stepNext)
         {
             throw new NotImplementedException();
         }

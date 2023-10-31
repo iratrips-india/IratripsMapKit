@@ -1464,35 +1464,40 @@ namespace Iratrips.Mapkit.Droid
             var positionLatLng = new LatLng(currentPosition.Latitude, currentPosition.Longitude);
 
             var distance = SphericalUtil.ComputeDistanceBetween(closestPointLatLng, positionLatLng);
-            var heading = SphericalUtil.ComputeHeading(nextPointLatLng, closestPointLatLng);
+            var heading = SphericalUtil.ComputeHeading(closestPointLatLng, nextPointLatLng);
 
-            var extrapolated = SphericalUtil.ComputeOffset(closestPointLatLng, -1 * distance, heading);
+            var extrapolated = SphericalUtil.ComputeOffset(closestPointLatLng, distance, heading);
             return new Position(extrapolated.Latitude, extrapolated.Longitude);
         }
 
+        public bool IsOnScreen(Position current)
+        {
+            LatLng newPos = new LatLng(current.Latitude, current.Longitude);
+            var bounds = _googleMap.Projection.VisibleRegion.LatLngBounds;
+            return bounds.Contains(newPos);
+        }
+
+        public double GetBearing(Position stepCurrent, Position stepNext)
+        {
+            LatLng stepCurrentPos = new LatLng(stepCurrent.Latitude, stepCurrent.Longitude);
+            LatLng stepNextPos = new LatLng(stepNext.Latitude, stepNext.Longitude);
+
+            // compute our own bearing (do not use location bearing)
+            return SphericalUtil.ComputeHeading(stepCurrentPos, stepNextPos);
+        }
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
-        public void UpdateBearing(Position last, Position current, Position stepCurrent, Position stepNext)
+        public void UpdateBearing(Position last, Position current, double bearing)
         {
             if (_googleMap == null || !_isInitialized) return;
 
             LatLng newPos = new LatLng(current.Latitude, current.Longitude);
-            var onScreen = _googleMap.Projection.VisibleRegion.LatLngBounds.Contains(newPos);
-            if (onScreen)
-                return;
-
             LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
-
-            LatLng stepCurrentPos = new LatLng(stepCurrent.Latitude, stepCurrent.Longitude);
-            LatLng stepNextPos = new LatLng(stepNext.Latitude, stepNext.Longitude);
 
             // ignore very small position deviations (prevents wild swinging)
             double d = SphericalUtil.ComputeDistanceBetween(oldPos, newPos);
             if (d < 1)
                 return;
-
-            // compute our own bearing (do not use location bearing)
-            double bearing = SphericalUtil.ComputeHeading(stepCurrentPos, stepNextPos);
 
             //-----------------------------------------------
             // Next section really only needs to be done once
@@ -1540,7 +1545,9 @@ namespace Iratrips.Mapkit.Droid
             CameraPosition.Builder b = new CameraPosition.Builder();
             b.Zoom(currentPosition.Zoom);
             b.Bearing((float)(bearing));
-            b.Target(shadowTgt);
+
+            if (!_googleMap.Projection.VisibleRegion.LatLngBounds.Contains(newPos))
+                b.Target(shadowTgt);
 
             CameraUpdate cu = CameraUpdateFactory.NewCameraPosition(b.Build());
             _googleMap.AnimateCamera(cu);

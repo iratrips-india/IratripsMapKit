@@ -610,13 +610,19 @@ namespace Iratrips.Mapkit
         public void MoveToMapRegion(MapSpan region, bool animate = false) => MapFunctions.MoveToMapRegion(region, animate);
 
         /// <summary>
+        /// Return the bearing between two points
+        /// </summary>
+        /// <param name="stepCurrent">Current position on the poly line</param>
+        /// <param name="stepNext">Next position on the poly line</param>
+        public double GetBearing(Position stepCurrent, Position stepNext) => MapFunctions.GetBearing(stepCurrent, stepNext);
+
+        /// <summary>
         /// Rotate the map with the computed bearing for directions
         /// </summary>
         /// <param name="last">Last location of the device</param>
         /// <param name="current">New location of the device</param>
-        /// <param name="stepCurrentPos">Current position on the step</param>
-        /// <param name="stepNextPos">Next position on the step</param>
-        public void UpdateBearing(Position last, Position current, Position stepCurrentPos, Position stepNextPos) => MapFunctions.UpdateBearing(last, current, stepCurrentPos, stepNextPos);
+        /// <param name="bearing">Bearing value computed using GetBearing function.</param>
+        public void UpdateBearing(Position last, Position current, double bearing) => MapFunctions.UpdateBearing(last, current, bearing);
 
         /// <summary>
         /// Returns the snap position which can be use to show current location on the road.
@@ -628,6 +634,11 @@ namespace Iratrips.Mapkit
             Position currentPosition) =>
             MapFunctions.GetSnapPosition(nearestPointOnRoute, nextPointOnRoute, currentPosition);
 
+        /// <summary>
+        /// Returns true if the marker is on screen.
+        /// </summary>
+        /// <param name="current">Current device location</param>
+        public bool IsOnScreen(Position current) => MapFunctions.IsOnScreen(current);
 
         /// <summary>
         /// Fits the map region to make all given positions visible
