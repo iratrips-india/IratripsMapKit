@@ -610,19 +610,11 @@ namespace Iratrips.Mapkit
         public void MoveToMapRegion(MapSpan region, bool animate = false) => MapFunctions.MoveToMapRegion(region, animate);
 
         /// <summary>
-        /// Return the bearing between two points
-        /// </summary>
-        /// <param name="stepCurrent">Current position on the poly line</param>
-        /// <param name="stepNext">Next position on the poly line</param>
-        public double GetBearing(Position stepCurrent, Position stepNext) => MapFunctions.GetBearing(stepCurrent, stepNext);
-
-        /// <summary>
         /// Rotate the map with the computed bearing for directions
         /// </summary>
-        /// <param name="last">Last location of the device</param>
         /// <param name="current">New location of the device</param>
         /// <param name="bearing">Bearing value computed using GetBearing function.</param>
-        public void UpdateBearing(Position last, Position current, double bearing) => MapFunctions.UpdateBearing(last, current, bearing);
+        public void MoveToCurrentForDriving(Position current, double bearing) => MapFunctions.MoveToCurrentForDriving(current, bearing);
 
         /// <summary>
         /// Returns the snap position which can be use to show current location on the road.

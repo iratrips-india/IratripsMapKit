@@ -28,19 +28,11 @@ namespace Iratrips.Mapkit.Interfaces
         void MoveToMapRegion(MapSpan region, bool animate);
 
         /// <summary>
-        /// Return the bearing between two points
+        /// Rotate the map with the computed bearing for directions and keep the marker at the bottom center.
         /// </summary>
-        /// <param name="stepCurrent">Current position on the poly line</param>
-        /// <param name="stepNext">Next position on the poly line</param>
-        double GetBearing(Position stepCurrent, Position stepNext);
-
-        /// <summary>
-        /// Rotate the map with the computed bearing for directions
-        /// </summary>
-        /// <param name="last">Last location of the device</param>
         /// <param name="current">New location of the device</param>
         /// <param name="bearing">Bearing value computed using GetBearing function.</param>
-        void UpdateBearing(Position last, Position current, double bearing);
+        void MoveToCurrentForDriving(Position current, double bearing);
 
 
         /// <summary>

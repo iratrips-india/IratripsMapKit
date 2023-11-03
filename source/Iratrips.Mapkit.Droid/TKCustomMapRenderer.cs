@@ -1477,27 +1477,18 @@ namespace Iratrips.Mapkit.Droid
             return bounds.Contains(newPos);
         }
 
-        public double GetBearing(Position stepCurrent, Position stepNext)
-        {
-            LatLng stepCurrentPos = new LatLng(stepCurrent.Latitude, stepCurrent.Longitude);
-            LatLng stepNextPos = new LatLng(stepNext.Latitude, stepNext.Longitude);
-
-            // compute our own bearing (do not use location bearing)
-            return SphericalUtil.ComputeHeading(stepCurrentPos, stepNextPos);
-        }
-
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
-        public void UpdateBearing(Position last, Position current, double bearing)
+        public void MoveToCurrentForDriving(Position current, double bearing)
         {
             if (_googleMap == null || !_isInitialized) return;
 
-            LatLng newPos = new LatLng(current.Latitude, current.Longitude);
-            LatLng oldPos = new LatLng(last.Latitude, last.Longitude);
+            var currentPosition = _googleMap.CameraPosition;
 
-            // ignore very small position deviations (prevents wild swinging)
-            double d = SphericalUtil.ComputeDistanceBetween(oldPos, newPos);
-            if (d < 1)
-                return;
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (bearing == 404)
+                bearing = currentPosition.Bearing;
+
+            LatLng newPos = new LatLng(current.Latitude, current.Longitude);
 
             //-----------------------------------------------
             // Next section really only needs to be done once
@@ -1520,8 +1511,6 @@ namespace Iratrips.Mapkit.Droid
             LatLng shadowTgt = SphericalUtil.ComputeOffset(newPos, offsetDistance, bearing);
 
             // update camera
-            var currentPosition = _googleMap.CameraPosition;
-
             var b = new CameraPosition.Builder();
             b.Zoom(currentPosition.Zoom);
             b.Bearing((float)(bearing));

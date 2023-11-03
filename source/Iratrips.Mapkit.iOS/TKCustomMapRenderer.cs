@@ -1837,7 +1837,7 @@ namespace Iratrips.Mapkit.iOS
                 : Map.ViewForAnnotation(annotation);
 
 
-        public void UpdateBearing(Position last, Position current, double bearing)
+        public void MoveToCurrentForDriving(Position current, double bearing)
         {
             throw new NotImplementedException();
         }
