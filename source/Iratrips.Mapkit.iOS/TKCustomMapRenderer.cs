@@ -1856,6 +1856,5 @@ namespace Iratrips.Mapkit.iOS
         {
             throw new NotImplementedException();
         }
-
     }
 }

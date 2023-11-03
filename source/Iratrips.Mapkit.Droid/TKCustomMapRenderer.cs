@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
+using Android.Gms.Maps.Utils;
+using Android.Gms.Maps.Utils.Clustering;
 using Android.Graphics;
+using Android.OS;
+using Android.Widget;
 using Iratrips.Mapkit;
 using Iratrips.Mapkit.Api.Google;
 using Iratrips.Mapkit.Droid;
@@ -15,16 +13,18 @@ using Iratrips.Mapkit.Interfaces;
 using Iratrips.Mapkit.Models;
 using Iratrips.Mapkit.Overlays;
 using Iratrips.Mapkit.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Color = Xamarin.Forms.Color;
-using System.Collections;
-using Android.OS;
-using Android.Content;
-using Android.Gms.Maps.Utils.Clustering;
-using Android.Widget;
-using Android.Gms.Maps.Utils;
-using Android.Locations;
+using Point = Android.Graphics.Point;
 
 [assembly: ExportRenderer(typeof(TKCustomMap), typeof(TKCustomMapRenderer))]
 namespace Iratrips.Mapkit.Droid
@@ -261,7 +261,7 @@ namespace Iratrips.Mapkit.Droid
                 _googleMap.MarkerDragStart += OnMarkerDragStart;
                 _googleMap.InfoWindowClick += OnInfoWindowClick;
                 _googleMap.MyLocationChange += OnUserLocationChange;
-                
+
                 _googleMap.SetOnCameraIdleListener(this);
                 _googleMap.SetOnCameraMoveStartedListener(this);
                 _googleMap.SetInfoWindowAdapter(this);
@@ -1082,7 +1082,7 @@ namespace Iratrips.Mapkit.Droid
             }
             else
                 errorMessage = "Unexpected result";
-    
+
 
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -1162,7 +1162,7 @@ namespace Iratrips.Mapkit.Droid
             {
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
-            
+
             markerOptions.SetIcon(bitmap);
             return Task.CompletedTask;
         }
@@ -1516,40 +1516,23 @@ namespace Iratrips.Mapkit.Droid
             double offsetDistance = SphericalUtil.ComputeDistanceBetween(centerLoc, offsetNewLoc);
             //-----------------------------------------------
 
-
             // Compute shadow target position from current position (see diagram)
             LatLng shadowTgt = SphericalUtil.ComputeOffset(newPos, offsetDistance, bearing);
-
-            //// update circles
-            //if (centerCircle != null)
-            //{
-            //    centerCircle.setCenter(shadowTgt);
-            //}
-            //else
-            //{
-            //    centerCircle = mMap.addCircle(new CircleOptions().strokeColor(Color.BLUE).center(shadowTgt).radius(50));
-            //}
-            //if (carCircle != null)
-            //{
-            //    carCircle.setCenter(newPos);
-            //}
-            //else
-            //{
-            //    carCircle = mMap.addCircle(new CircleOptions().strokeColor(Color.GREEN).center(newPos).radius(50));
-            //}
-
 
             // update camera
             var currentPosition = _googleMap.CameraPosition;
 
-            CameraPosition.Builder b = new CameraPosition.Builder();
+            var b = new CameraPosition.Builder();
             b.Zoom(currentPosition.Zoom);
             b.Bearing((float)(bearing));
 
-            if (!_googleMap.Projection.VisibleRegion.LatLngBounds.Contains(newPos))
+            var bounds = _googleMap.Projection.VisibleRegion.LatLngBounds;
+            if (!bounds.Contains(shadowTgt))
                 b.Target(shadowTgt);
+            else
+                b.Target(_googleMap.CameraPosition.Target);
 
-            CameraUpdate cu = CameraUpdateFactory.NewCameraPosition(b.Build());
+            var cu = CameraUpdateFactory.NewCameraPosition(b.Build());
             _googleMap.AnimateCamera(cu);
         }
 
@@ -1645,7 +1628,7 @@ namespace Iratrips.Mapkit.Droid
 
             public void OnCancel()
             {
-                
+
             }
 
             public void OnFinish()
