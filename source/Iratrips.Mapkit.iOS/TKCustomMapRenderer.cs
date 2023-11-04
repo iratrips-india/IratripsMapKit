@@ -1856,5 +1856,10 @@ namespace Iratrips.Mapkit.iOS
         {
             throw new NotImplementedException();
         }
+
+        public float? GetCurrentBearing()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

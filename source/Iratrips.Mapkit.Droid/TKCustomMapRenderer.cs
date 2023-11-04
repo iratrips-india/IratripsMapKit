@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -1476,6 +1477,17 @@ namespace Iratrips.Mapkit.Droid
             var bounds = _googleMap.Projection.VisibleRegion.LatLngBounds;
             return bounds.Contains(newPos);
         }
+
+        public float? GetCurrentBearing()
+        {
+            var value = _googleMap?.CameraPosition?.Bearing;
+            if (value == null) return null;
+
+            if (value > 180)
+                return (float)(value - 360);
+            else
+                return (float)value;
+        } 
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
         public void MoveToCurrentForDriving(Position current, double bearing)

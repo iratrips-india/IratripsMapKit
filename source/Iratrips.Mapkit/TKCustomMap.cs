@@ -627,6 +627,11 @@ namespace Iratrips.Mapkit
             MapFunctions.GetSnapPosition(nearestPointOnRoute, nextPointOnRoute, currentPosition);
 
         /// <summary>
+        /// Returns current bearing.
+        /// </summary>
+        public float? GetCurrentBearing() => MapFunctions.GetCurrentBearing();
+
+        /// <summary>
         /// Returns true if the marker is on screen.
         /// </summary>
         /// <param name="current">Current device location</param>

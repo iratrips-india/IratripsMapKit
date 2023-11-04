@@ -50,6 +50,11 @@ namespace Iratrips.Mapkit.Interfaces
         bool IsOnScreen(Position current);
 
         /// <summary>
+        /// Returns current bearing.
+        /// </summary>
+        float? GetCurrentBearing();
+
+        /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>
         /// </summary>
         /// <param name="regions">Regions to move the map to</param>
