@@ -1,9 +1,17 @@
-﻿using Android.Content;
+﻿using System;
+using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.Gms.Maps.Utils.Clustering;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Android.Animation;
 using Xamarin.Forms.Platform.Android;
+using Android.Gms.Maps.Utils;
+using System.Collections.Generic;
+using AndroidX.ConstraintLayout.Motion.Widget;
+using Java.Net;
+using static Android.Widget.GridLayout;
+using static Android.Animation.Animator;
 
 namespace Iratrips.Mapkit.Droid
 {
@@ -12,6 +20,13 @@ namespace Iratrips.Mapkit.Droid
     /// </summary>
     internal class TKMarker : Java.Lang.Object, IClusterItem
     {
+        private ValueAnimator _pinAnimator;
+        private double? _currentSpeed = null;
+        private int _furtherPointIndex = -1;
+        private IList<Position> _furtherPoints = null;
+        private PinAnimatorUpdateListener _pinAnimatorUpdateListener = null;
+        private AnimatorListener _animatorListener = null;
+
         Context _context;
         /// <summary>
         /// Creates a new instance of <see cref="TKMarker"/>
@@ -26,7 +41,7 @@ namespace Iratrips.Mapkit.Droid
         /// <summary>
         /// Gets/Sets the custom pin
         /// </summary>
-        public TKCustomMapPin Pin { get;  set; }
+        public TKCustomMapPin Pin { get; set; }
         /// <summary>
         /// Gets the current pin position
         /// </summary>
@@ -66,6 +81,7 @@ namespace Iratrips.Mapkit.Droid
                 case nameof(TKCustomMapPin.Position):
                     if (!isDragging)
                     {
+                        CancelAnimation();
                         Marker.Position = new LatLng(Pin.Position.Latitude, Pin.Position.Longitude);
                     }
                     break;
@@ -103,7 +119,7 @@ namespace Iratrips.Mapkit.Droid
 
             if (Pin.Callout != null && !string.IsNullOrWhiteSpace(Pin.Callout.Title))
                 markerOptions.SetTitle(Pin.Callout.Title);
-            
+
             if (Pin.Callout != null && !string.IsNullOrWhiteSpace(Pin.Callout.Subtitle))
                 markerOptions.SetSnippet(Pin.Callout.Subtitle);
 
@@ -119,8 +135,6 @@ namespace Iratrips.Mapkit.Droid
         /// <summary>
         /// Updates the image of a pin
         /// </summary>
-        /// <param name="pin">The forms pin</param>
-        /// <param name="markerOptions">The native marker options</param>
         void UpdateImage()
         {
             BitmapDescriptor bitmap;
@@ -184,6 +198,129 @@ namespace Iratrips.Mapkit.Droid
                 bitmap = BitmapDescriptorFactory.DefaultMarker();
             }
             markerOptions.SetIcon(bitmap);
+        }
+
+        public void CancelAnimation()
+        {
+            _currentSpeed = null;
+            _furtherPoints = null;
+            _furtherPointIndex = -1;
+
+            if (_pinAnimator is { IsRunning: true })
+                _pinAnimator.Pause();
+        }
+
+        public void AnimateMarkerPosition(double speed, IList<Position> furtherPoints)
+        {
+            CancelAnimation();
+
+            if (speed <= 0 || furtherPoints == null || furtherPoints.Count == 0)
+                return;
+
+            _currentSpeed = speed * 0.75;
+            _furtherPoints = furtherPoints;
+            _furtherPointIndex = -1;
+
+            if (_pinAnimator == null)
+            {
+                _pinAnimatorUpdateListener = new PinAnimatorUpdateListener(this.Marker);
+                _animatorListener = new AnimatorListener(this);
+
+                _pinAnimator = ValueAnimator.OfFloat(0, 1);
+                if (_pinAnimator == null) return;
+
+                _pinAnimator.SetInterpolator(new Android.Views.Animations.LinearInterpolator());
+                _pinAnimator.AddUpdateListener(_pinAnimatorUpdateListener);
+                _pinAnimator.AddListener(_animatorListener);
+            }
+
+            AnimateToNextPosition();
+        }
+
+        public void AnimateToNextPosition()
+        {
+            if (_furtherPoints == null || _furtherPoints.Count == 0 || _currentSpeed == null)
+                return;
+
+            if (_furtherPointIndex > _furtherPoints.Count - 1)
+                return;
+
+            _furtherPointIndex++;
+
+            if (_pinAnimator.IsRunning)
+                _pinAnimator.Pause();
+
+            if (_furtherPointIndex > _furtherPoints.Count - 1)
+                return;
+
+            var nextPosition = _furtherPoints[_furtherPointIndex];
+            var nextLatLng = nextPosition.ToLatLng();
+
+            var distance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, nextLatLng);
+            _pinAnimator.SetCurrentFraction(0);
+
+            _animatorListener.EndPosition = nextPosition;
+            _pinAnimatorUpdateListener.InitialPosition =  this.Marker.Position;
+            _pinAnimatorUpdateListener.TotalDistance = distance;
+            _pinAnimatorUpdateListener.CurrentBearing = SphericalUtil.ComputeHeading(this.Marker.Position, nextLatLng);
+            
+            var duration = (long)((distance / _currentSpeed) * 1000);
+            _pinAnimator.SetDuration(duration);
+            _pinAnimator.Start();
+        }
+
+        private class PinAnimatorUpdateListener : Java.Lang.Object, ValueAnimator.IAnimatorUpdateListener
+        {
+            private readonly Marker _marker;
+
+            public PinAnimatorUpdateListener(Marker marker)
+            {
+                _marker = marker;
+            }
+
+            public LatLng InitialPosition { get; set; }
+            public double TotalDistance { get; set; }
+            public double CurrentBearing { get; set; }
+
+            public void OnAnimationUpdate(ValueAnimator animation)
+            {
+                var change = this.TotalDistance * animation.AnimatedFraction;
+                if (change > 0)
+                    _marker.Position = SphericalUtil.ComputeOffset(InitialPosition, change, CurrentBearing);
+            }
+        }
+    }
+
+    internal class AnimatorListener : Java.Lang.Object, Animator.IAnimatorListener
+    {
+        private readonly TKMarker _marker;
+
+        public Position EndPosition { get; set; }
+
+        public AnimatorListener(TKMarker marker)
+        {
+            _marker = marker;
+        }
+
+        public void OnAnimationCancel(Animator animation)
+        {
+
+        }
+
+        public void OnAnimationEnd(Animator animation)
+        {
+            _marker.Marker.Position = EndPosition.ToLatLng();
+            _marker.AnimateToNextPosition();
+        }
+
+        public void OnAnimationRepeat(Animator animation)
+        {
+
+        }
+
+        public void OnAnimationStart(Animator animation)
+        {
+
         }
     }
 }

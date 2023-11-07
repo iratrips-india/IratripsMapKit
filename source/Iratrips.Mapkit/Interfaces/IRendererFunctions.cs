@@ -55,6 +55,20 @@ namespace Iratrips.Mapkit.Interfaces
         float? GetCurrentBearing();
 
         /// <summary>
+        /// Animate marker position at given speed.
+        /// </summary>
+        /// <param name="pin">Pin which needs to be animated</param>
+        /// <param name="speed">Current speed in meters / second</param>
+        /// <param name="nextPositions">Next few positions</param>
+        void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions);
+
+        /// <summary>
+        /// Stop marker position animation.
+        /// </summary>
+        /// <param name="pin">Pin which animation needs to be stop</param>
+        void StopAnimateMarkerPosition(TKCustomMapPin pin);
+
+        /// <summary>
         /// Moves the visible region to the specified collection <see cref="MapSpan"/>
         /// </summary>
         /// <param name="regions">Regions to move the map to</param>

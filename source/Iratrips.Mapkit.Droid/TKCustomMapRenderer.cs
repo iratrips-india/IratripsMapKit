@@ -1,3 +1,4 @@
+using Android.Animation;
 using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
@@ -20,12 +21,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Color = Xamarin.Forms.Color;
-using Point = Android.Graphics.Point;
 
 [assembly: ExportRenderer(typeof(TKCustomMap), typeof(TKCustomMapRenderer))]
 namespace Iratrips.Mapkit.Droid
@@ -1528,7 +1527,15 @@ namespace Iratrips.Mapkit.Droid
             b.Bearing((float)(bearing));
 
             var bounds = _googleMap.Projection.VisibleRegion.LatLngBounds;
-            if (!bounds.Contains(shadowTgt))
+
+            var nePoint = p.ToScreenLocation(bounds.Northeast);
+            var swPoint = p.ToScreenLocation(bounds.Southwest);
+
+            var stPoint = p.ToScreenLocation(shadowTgt);
+
+            int padding = 50;
+
+            if (stPoint.Y < nePoint.Y + padding || stPoint.Y > swPoint.Y - padding || stPoint.X < nePoint.X + padding || stPoint.X > swPoint.X - padding)
                 b.Target(shadowTgt);
             else
                 b.Target(_googleMap.CameraPosition.Target);
@@ -1636,6 +1643,23 @@ namespace Iratrips.Mapkit.Droid
             {
                 _completeAction?.Invoke();
             }
+        }
+
+
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions)
+        {
+            if (!_markers.TryGetValue(pin, out var marker))
+                return;
+
+            marker.AnimateMarkerPosition(speed, nextPositions);
+        }
+
+        public void StopAnimateMarkerPosition(TKCustomMapPin pin)
+        {
+            if (!_markers.TryGetValue(pin, out var marker))
+                return;
+
+            marker.CancelAnimation();
         }
     }
 }

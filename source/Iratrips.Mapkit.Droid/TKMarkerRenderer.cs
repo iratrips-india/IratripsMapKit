@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
-using Java.Lang;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Xamarin.Forms.Platform.Android;
+using Android.Gms.Maps.Utils.Clustering;
 using Android.Gms.Maps.Utils.Clustering.View;
 using Android.Gms.Maps.Utils.UI;
-using Android.Gms.Maps.Utils.Clustering;
+using System.Linq;
 
 namespace Iratrips.Mapkit.Droid
 {

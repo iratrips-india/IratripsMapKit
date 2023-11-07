@@ -638,6 +638,20 @@ namespace Iratrips.Mapkit
         public bool IsOnScreen(Position current) => MapFunctions.IsOnScreen(current);
 
         /// <summary>
+        /// Animate marker position at given speed.
+        /// </summary>
+        /// <param name="pin">Pin which needs to be animated</param>
+        /// <param name="speed">Current speed in meters / second</param>
+        /// <param name="nextPositions">Next few positions</param>
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions) => MapFunctions.AnimateMarkerPosition(pin, speed, nextPositions);
+
+        /// <summary>
+        /// Stop marker position animation.
+        /// </summary>
+        /// <param name="pin">Pin which animation needs to be stop</param>
+        public void StopAnimateMarkerPosition(TKCustomMapPin pin) => MapFunctions.StopAnimateMarkerPosition(pin);
+
+        /// <summary>
         /// Fits the map region to make all given positions visible
         /// </summary>
         /// <param name="positions">Positions to fit inside the MapRegion</param>
