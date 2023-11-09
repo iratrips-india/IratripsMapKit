@@ -1,17 +1,12 @@
-﻿using System;
+﻿using Android.Animation;
 using Android.Content;
 using Android.Gms.Maps.Model;
+using Android.Gms.Maps.Utils;
 using Android.Gms.Maps.Utils.Clustering;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Android.Animation;
 using Xamarin.Forms.Platform.Android;
-using Android.Gms.Maps.Utils;
-using System.Collections.Generic;
-using AndroidX.ConstraintLayout.Motion.Widget;
-using Java.Net;
-using static Android.Widget.GridLayout;
-using static Android.Animation.Animator;
 
 namespace Iratrips.Mapkit.Droid
 {
@@ -26,6 +21,7 @@ namespace Iratrips.Mapkit.Droid
         private IList<Position> _furtherPoints = null;
         private PinAnimatorUpdateListener _pinAnimatorUpdateListener = null;
         private AnimatorListener _animatorListener = null;
+        private double? _lastGap = null;
 
         Context _context;
         /// <summary>
@@ -81,8 +77,21 @@ namespace Iratrips.Mapkit.Droid
                 case nameof(TKCustomMapPin.Position):
                     if (!isDragging)
                     {
-                        CancelAnimation();
-                        Marker.Position = new LatLng(Pin.Position.Latitude, Pin.Position.Longitude);
+                        var newPosition = new LatLng(Pin.Position.Latitude, Pin.Position.Longitude);
+
+                        if (_pinAnimator is { IsRunning: true })
+                        {
+                            CancelAnimation();
+                            _lastGap = SphericalUtil.ComputeDistanceBetween(Marker.Position, newPosition);
+                            if (_lastGap > 50) //Don't animate if the gap is large
+                                Marker.Position = newPosition;
+                            else
+                            {
+                                //Skip 
+                            }
+                        }
+                        else
+                            Marker.Position = newPosition;
                     }
                     break;
                 case nameof(TKCustomMapPin.IsVisible):
@@ -217,7 +226,7 @@ namespace Iratrips.Mapkit.Droid
             if (speed <= 0 || furtherPoints == null || furtherPoints.Count == 0)
                 return;
 
-            _currentSpeed = speed * 0.75;
+            _currentSpeed = speed;
             _furtherPoints = furtherPoints;
             _furtherPointIndex = -1;
 
@@ -239,34 +248,44 @@ namespace Iratrips.Mapkit.Droid
 
         public void AnimateToNextPosition()
         {
-            if (_furtherPoints == null || _furtherPoints.Count == 0 || _currentSpeed == null)
-                return;
+            while (true)
+            {
+                if (_furtherPoints == null || _furtherPoints.Count == 0 || _currentSpeed == null) return;
 
-            if (_furtherPointIndex > _furtherPoints.Count - 1)
-                return;
+                if (_furtherPointIndex > _furtherPoints.Count - 1) return;
 
-            _furtherPointIndex++;
+                _furtherPointIndex++;
 
-            if (_pinAnimator.IsRunning)
-                _pinAnimator.Pause();
+                if (_pinAnimator.IsRunning) _pinAnimator.Pause();
 
-            if (_furtherPointIndex > _furtherPoints.Count - 1)
-                return;
+                if (_furtherPointIndex > _furtherPoints.Count - 1) return;
 
-            var nextPosition = _furtherPoints[_furtherPointIndex];
-            var nextLatLng = nextPosition.ToLatLng();
+                var nextPosition = _furtherPoints[_furtherPointIndex];
+                var nextLatLng = nextPosition.ToLatLng();
 
-            var distance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, nextLatLng);
-            _pinAnimator.SetCurrentFraction(0);
+                var distance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, nextLatLng);
+                var distanceWithGap = !_lastGap.HasValue ? 0 : _lastGap.Value + distance;
+                
+                _lastGap = null;
 
-            _animatorListener.EndPosition = nextPosition;
-            _pinAnimatorUpdateListener.InitialPosition =  this.Marker.Position;
-            _pinAnimatorUpdateListener.TotalDistance = distance;
-            _pinAnimatorUpdateListener.CurrentBearing = SphericalUtil.ComputeHeading(this.Marker.Position, nextLatLng);
-            
-            var duration = (long)((distance / _currentSpeed) * 1000);
-            _pinAnimator.SetDuration(duration);
-            _pinAnimator.Start();
+                if (distanceWithGap < 0)
+                {
+                    //Not sure if this happen but added for safety
+                    continue;
+                }
+
+                _pinAnimator.SetCurrentFraction(0);
+
+                _animatorListener.EndPosition = nextPosition;
+                _pinAnimatorUpdateListener.InitialPosition = this.Marker.Position;
+                _pinAnimatorUpdateListener.TotalDistance = distanceWithGap;
+                _pinAnimatorUpdateListener.CurrentBearing = SphericalUtil.ComputeHeading(this.Marker.Position, nextLatLng);
+
+                var duration = (long)((distance / _currentSpeed) * 1000);
+                _pinAnimator.SetDuration(duration);
+                _pinAnimator.Start();
+                break;
+            }
         }
 
         private class PinAnimatorUpdateListener : Java.Lang.Object, ValueAnimator.IAnimatorUpdateListener

@@ -1486,7 +1486,7 @@ namespace Iratrips.Mapkit.Droid
                 return (float)(value - 360);
             else
                 return (float)value;
-        } 
+        }
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
         public void MoveToCurrentForDriving(Position current, double bearing)
@@ -1656,6 +1656,7 @@ namespace Iratrips.Mapkit.Droid
 
         public void StopAnimateMarkerPosition(TKCustomMapPin pin)
         {
+            if (pin == null) return;
             if (!_markers.TryGetValue(pin, out var marker))
                 return;
 
