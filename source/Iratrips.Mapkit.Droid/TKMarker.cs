@@ -5,7 +5,11 @@ using Android.Gms.Maps.Utils;
 using Android.Gms.Maps.Utils.Clustering;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Android.OS;
+using Java.Lang;
 using Xamarin.Forms.Platform.Android;
 
 namespace Iratrips.Mapkit.Droid
@@ -18,7 +22,7 @@ namespace Iratrips.Mapkit.Droid
         private ValueAnimator _pinAnimator;
         private double? _currentSpeed = null;
         private int _furtherPointIndex = -1;
-        private IList<Position> _furtherPoints = null;
+        private IList<LatLng> _furtherPoints = null;
         private PinAnimatorUpdateListener _pinAnimatorUpdateListener = null;
         private AnimatorListener _animatorListener = null;
         private double? _lastGap = null;
@@ -84,7 +88,10 @@ namespace Iratrips.Mapkit.Droid
                             CancelAnimation();
                             _lastGap = SphericalUtil.ComputeDistanceBetween(Marker.Position, newPosition);
                             if (_lastGap > 50) //Don't animate if the gap is large
-                                Marker.Position = newPosition;
+                            {
+                                AnimateMarkerPosition(Pin.Position);
+                                Android.Util.Log.Debug("MapKit", "Large gap, skipping animation");
+                            }
                             else
                             {
                                 //Skip 
@@ -209,27 +216,8 @@ namespace Iratrips.Mapkit.Droid
             markerOptions.SetIcon(bitmap);
         }
 
-        public void CancelAnimation()
+        private void InitAnimation()
         {
-            _currentSpeed = null;
-            _furtherPoints = null;
-            _furtherPointIndex = -1;
-
-            if (_pinAnimator is { IsRunning: true })
-                _pinAnimator.Pause();
-        }
-
-        public void AnimateMarkerPosition(double speed, IList<Position> furtherPoints)
-        {
-            CancelAnimation();
-
-            if (speed <= 0 || furtherPoints == null || furtherPoints.Count == 0)
-                return;
-
-            _currentSpeed = speed;
-            _furtherPoints = furtherPoints;
-            _furtherPointIndex = -1;
-
             if (_pinAnimator == null)
             {
                 _pinAnimatorUpdateListener = new PinAnimatorUpdateListener(this.Marker);
@@ -242,11 +230,88 @@ namespace Iratrips.Mapkit.Droid
                 _pinAnimator.AddUpdateListener(_pinAnimatorUpdateListener);
                 _pinAnimator.AddListener(_animatorListener);
             }
-
-            AnimateToNextPosition();
         }
 
-        public void AnimateToNextPosition()
+
+        public void AnimateMarkerPosition(Position newPosition)
+        {
+            CancelAnimation();
+            InitAnimation();
+
+            if (_pinAnimator.IsRunning) _pinAnimator.Pause();
+
+            var newLatLng = newPosition.ToLatLng();
+            var remainingDistance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, newLatLng);
+
+            Android.Util.Log.Debug("MapKit", $"Starting Animation till the new position with distance {remainingDistance} meters.");
+
+            _pinAnimator.SetCurrentFraction(0);
+
+            _animatorListener.EndPosition = newLatLng;
+            _pinAnimatorUpdateListener.InitialPosition = this.Marker.Position;
+            _pinAnimatorUpdateListener.TotalDistance = remainingDistance;
+            _pinAnimatorUpdateListener.CurrentBearing = SphericalUtil.ComputeHeading(this.Marker.Position, newLatLng);
+
+            var duration = 1000;
+            _pinAnimator.SetDuration(duration);
+            _pinAnimator.Start();
+        }
+
+        public void CancelAnimation()
+        {
+            _currentSpeed = null;
+            _furtherPoints = null;
+            _furtherPointIndex = -1;
+
+            if (_pinAnimator is { IsRunning: true })
+            {
+                _pinAnimator.Pause();
+            }
+        }
+
+        public void AnimateMarkerPosition(double? speed, Position currentPosition, IList<Position> furtherPoints)
+        {
+            CancelAnimation();
+            if (speed <= 0 || furtherPoints == null || furtherPoints.Count == 0)
+                return;
+
+            _currentSpeed = speed;
+            _furtherPoints = furtherPoints.Select(k => k.ToLatLng()).ToList();
+            _furtherPointIndex = -1;
+
+            Android.Util.Log.Debug("MapKit", $"Starting Animation Distance: {SphericalUtil.ComputeLength(furtherPoints.Select(k => k.ToLatLng()).ToList())} meters");
+
+            InitAnimation();
+
+            var currentLatLng = currentPosition.ToLatLng();
+
+            var heading1 = SphericalUtil.ComputeHeading(this.Marker.Position, _furtherPoints[0]);
+            var heading2 = SphericalUtil.ComputeHeading(_furtherPoints[0], _furtherPoints[1]);
+            if (System.Math.Abs(heading2 - heading1) > 90)
+            {
+                var polyIndex = LocationIndexOnLine(this.Marker.Position, _furtherPoints);
+                if (polyIndex >= 0)
+                {
+                    var distance = SphericalUtil.ComputeDistanceBetween(currentLatLng, _furtherPoints[0]);
+                    if (polyIndex > 0)
+                    {
+                        for (var i = 0; i <= polyIndex; i++)
+                            distance += SphericalUtil.ComputeDistanceBetween(_furtherPoints[i], _furtherPoints[i + 1]);
+                    }
+
+                    distance += SphericalUtil.ComputeDistanceBetween(_furtherPoints[polyIndex], _furtherPoints[polyIndex + 1]);
+                    _furtherPoints = _furtherPoints.Skip(polyIndex + 1).ToList();
+                    
+                    AnimateToNextPosition(currentPosition.ToLatLng(), distance);
+                }
+                else
+                    AnimateToNextPosition(currentPosition.ToLatLng());
+            }
+            else
+                AnimateToNextPosition(currentPosition.ToLatLng());
+        }
+
+        public void AnimateToNextPosition(LatLng currentPosition, double? actualDistanceEx = null)
         {
             while (true)
             {
@@ -260,28 +325,28 @@ namespace Iratrips.Mapkit.Droid
 
                 if (_furtherPointIndex > _furtherPoints.Count - 1) return;
 
-                var nextPosition = _furtherPoints[_furtherPointIndex];
-                var nextLatLng = nextPosition.ToLatLng();
+                var nextLatLng = _furtherPoints[_furtherPointIndex];
 
-                var distance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, nextLatLng);
-                var distanceWithGap = !_lastGap.HasValue ? 0 : _lastGap.Value + distance;
-                
+                var remainingDistance = SphericalUtil.ComputeDistanceBetween(this.Marker.Position, nextLatLng);
+                var actualDistance = actualDistanceEx ?? SphericalUtil.ComputeDistanceBetween(currentPosition, nextLatLng);
+
                 _lastGap = null;
-
-                if (distanceWithGap < 0)
+                if (remainingDistance < 0)
                 {
+                    //Not sure if this happen but added for safety
+                    Android.Util.Log.Debug("MapKit", $"Remaining distance is less than zero.");
                     //Not sure if this happen but added for safety
                     continue;
                 }
 
                 _pinAnimator.SetCurrentFraction(0);
 
-                _animatorListener.EndPosition = nextPosition;
+                _animatorListener.EndPosition = nextLatLng;
                 _pinAnimatorUpdateListener.InitialPosition = this.Marker.Position;
-                _pinAnimatorUpdateListener.TotalDistance = distanceWithGap;
+                _pinAnimatorUpdateListener.TotalDistance = remainingDistance;
                 _pinAnimatorUpdateListener.CurrentBearing = SphericalUtil.ComputeHeading(this.Marker.Position, nextLatLng);
 
-                var duration = (long)((distance / _currentSpeed) * 1000);
+                var duration = (long)((actualDistance / _currentSpeed) * 1000);
                 _pinAnimator.SetDuration(duration);
                 _pinAnimator.Start();
                 break;
@@ -308,38 +373,63 @@ namespace Iratrips.Mapkit.Droid
                     _marker.Position = SphericalUtil.ComputeOffset(InitialPosition, change, CurrentBearing);
             }
         }
-    }
 
-    internal class AnimatorListener : Java.Lang.Object, Animator.IAnimatorListener
-    {
-        private readonly TKMarker _marker;
-
-        public Position EndPosition { get; set; }
-
-        public AnimatorListener(TKMarker marker)
+        internal class AnimatorListener : Java.Lang.Object, Animator.IAnimatorListener
         {
-            _marker = marker;
+            private readonly TKMarker _marker;
+
+            public LatLng EndPosition { get; set; }
+
+            public AnimatorListener(TKMarker marker)
+            {
+                _marker = marker;
+            }
+
+            public void OnAnimationCancel(Animator animation)
+            {
+
+            }
+
+            public void OnAnimationEnd(Animator animation)
+            {
+                //_marker.Marker.Position = EndPosition.ToLatLng();
+                _marker.AnimateToNextPosition(_marker.Marker.Position);
+            }
+
+            public void OnAnimationRepeat(Animator animation)
+            {
+
+            }
+
+            public void OnAnimationStart(Animator animation)
+            {
+
+            }
         }
 
-        public void OnAnimationCancel(Animator animation)
+        public int LocationIndexOnLine(LatLng point, IList<LatLng> polyLine)
         {
+            int edgeIndex = PolyUtil.LocationIndexOnPath(point, polyLine, true, 1);
+            if (edgeIndex >= 0)
+                return edgeIndex;
 
-        }
+            edgeIndex = PolyUtil.LocationIndexOnPath(point, polyLine, true, 2);
+            if (edgeIndex >= 0)
+                return edgeIndex;
 
-        public void OnAnimationEnd(Animator animation)
-        {
-            _marker.Marker.Position = EndPosition.ToLatLng();
-            _marker.AnimateToNextPosition();
-        }
+            edgeIndex = PolyUtil.LocationIndexOnPath(point, polyLine, true, 4);
+            if (edgeIndex >= 0)
+                return edgeIndex;
 
-        public void OnAnimationRepeat(Animator animation)
-        {
+            edgeIndex = PolyUtil.LocationIndexOnPath(point, polyLine, true, 8);
+            if (edgeIndex >= 0)
+                return edgeIndex;
 
-        }
+            edgeIndex = PolyUtil.LocationIndexOnPath(point, polyLine, true, 11);
+            if (edgeIndex >= 0)
+                return edgeIndex;
 
-        public void OnAnimationStart(Animator animation)
-        {
-
+            return -1;
         }
     }
 }

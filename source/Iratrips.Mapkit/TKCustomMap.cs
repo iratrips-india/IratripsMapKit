@@ -641,9 +641,17 @@ namespace Iratrips.Mapkit
         /// Animate marker position at given speed.
         /// </summary>
         /// <param name="pin">Pin which needs to be animated</param>
+        /// <param name="newPosition">New position</param>
+        public void AnimateMarkerPosition(TKCustomMapPin pin, Position newPosition) => MapFunctions.AnimateMarkerPosition(pin, newPosition);
+
+        /// <summary>
+        /// Animate marker position at given speed.
+        /// </summary>
+        /// <param name="pin">Pin which needs to be animated</param>
         /// <param name="speed">Current speed in meters / second</param>
+        /// <param name="currentPosition">Current position</param>
         /// <param name="nextPositions">Next few positions</param>
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions) => MapFunctions.AnimateMarkerPosition(pin, speed, nextPositions);
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions) => MapFunctions.AnimateMarkerPosition(pin, speed, currentPosition, nextPositions);
 
         /// <summary>
         /// Stop marker position animation.

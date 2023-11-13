@@ -1645,13 +1645,20 @@ namespace Iratrips.Mapkit.Droid
             }
         }
 
-
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions)
+        public void AnimateMarkerPosition(TKCustomMapPin pin, Position newPosition)
         {
             if (!_markers.TryGetValue(pin, out var marker))
                 return;
 
-            marker.AnimateMarkerPosition(speed, nextPositions);
+            marker.AnimateMarkerPosition(newPosition);
+        }
+
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions)
+        {
+            if (!_markers.TryGetValue(pin, out var marker))
+                return;
+
+            marker.AnimateMarkerPosition(speed, currentPosition, nextPositions);
         }
 
         public void StopAnimateMarkerPosition(TKCustomMapPin pin)

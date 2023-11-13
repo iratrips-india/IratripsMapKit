@@ -1862,7 +1862,12 @@ namespace Iratrips.Mapkit.iOS
             throw new NotImplementedException();
         }
 
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, IList<Position> nextPositions)
+        public void AnimateMarkerPosition(TKCustomMapPin pin, Position newPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions)
         {
             throw new NotImplementedException();
         }
