@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xamarin.Forms.Shapes;
 
 namespace Iratrips.Mapkit.Utilities
 {
@@ -26,7 +27,7 @@ namespace Iratrips.Mapkit.Utilities
     /// </summary>
     public class GmsPolyUtil
     {
-          const double DefaultTolerance = 0.1;  // meters.
+        const double DefaultTolerance = 0.1;  // meters.
 
         /// <summary>
         /// Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
@@ -37,7 +38,7 @@ namespace Iratrips.Mapkit.Utilities
         /// <param name="lng2"></param>
         /// <param name="lng3"></param>
         /// <returns></returns>
-         static double TanLatGC(double lat1, double lat2, double lng2, double lng3)
+        static double TanLatGC(double lat1, double lat2, double lng2, double lng3)
         {
             return (Math.Tan(lat1) * Math.Sin(lng2 - lng3) + Math.Tan(lat2) * Math.Sin(lng3)) / Math.Sin(lng2);
         }
@@ -49,7 +50,7 @@ namespace Iratrips.Mapkit.Utilities
         /// <param name="lng2"></param>
         /// <param name="lng3"></param>
         /// <returns></returns>
-         static double MercatorLatRhumb(double lat1, double lat2, double lng2, double lng3)
+        static double MercatorLatRhumb(double lat1, double lat2, double lng2, double lng3)
         {
             return (GmsMathUtils.Mercator(lat1) * (lng2 - lng3) + GmsMathUtils.Mercator(lat2) * lng3) / lng2;
         }
@@ -65,8 +66,8 @@ namespace Iratrips.Mapkit.Utilities
         /// <param name="lng3"></param>
         /// <param name="geodesic"></param>
         /// <returns></returns>
-         static bool Intersects(double lat1, double lat2, double lng2,
-                                      double lat3, double lng3, bool geodesic)
+        static bool Intersects(double lat1, double lat2, double lng2,
+                                     double lat3, double lng3, bool geodesic)
         {
             // Both ends on the same side of lng3.
             if ((lng3 >= 0 && lng3 >= lng2) || (lng3 < 0 && lng3 < lng2))
@@ -122,10 +123,10 @@ namespace Iratrips.Mapkit.Utilities
         /// <param name="polygon"></param>
         /// <param name="geodesic"></param>
         /// <returns></returns>
-        public static bool ContainsLocation(Position point, IEnumerable<Position> polygon, bool geodesic) 
+        public static bool ContainsLocation(Position point, IEnumerable<Position> polygon, bool geodesic)
         {
             int size = polygon.Count();
-            if (size == 0)  return false;
+            if (size == 0) return false;
 
             double lat3 = point.Latitude.ToRadian();
             double lng3 = point.Longitude.ToRadian();
@@ -134,17 +135,19 @@ namespace Iratrips.Mapkit.Utilities
             double lng1 = prev.Longitude.ToRadian();
             int nIntersect = 0;
 
-            foreach(var point2 in polygon)
+            foreach (var point2 in polygon)
             {
                 double dLng3 = GmsMathUtils.Wrap(lng3 - lng1, -Math.PI, Math.PI);
                 // Special case: point equal to vertex is inside.
-                if (lat3 == lat1 && dLng3 == 0) {
+                if (lat3 == lat1 && dLng3 == 0)
+                {
                     return true;
                 }
                 double lat2 = point2.Latitude.ToRadian();
                 double lng2 = point2.Longitude.ToRadian();
                 // Offset longitudes by -lng1.
-                if (Intersects(lat1, lat2, GmsMathUtils.Wrap(lng2 - lng1, -Math.PI, Math.PI), lat3, dLng3, geodesic)) {
+                if (Intersects(lat1, lat2, GmsMathUtils.Wrap(lng2 - lng1, -Math.PI, Math.PI), lat3, dLng3, geodesic))
+                {
                     ++nIntersect;
                 }
                 lat1 = lat2;
@@ -225,37 +228,38 @@ namespace Iratrips.Mapkit.Utilities
             // double tileWidthAtZoomLevelAtEquatorInDegrees = 360.0/Math.pow(2.0, map.getCameraPosition().zoom);
             double pixelSizeInMetersAtLatitude = (circumferenceOfEarthInMeters * Math.Cos(centerLatitude * (Math.PI / 180.0))) / Math.Pow(2.0, zoom + 8.0);
             double tolerance = pixelSizeInMetersAtLatitude * Math.Sqrt(2.0) * 10.0;
-            
+
             return IsLocationOnPath(point, polyline, geodesic, tolerance);
         }
 
-         static bool IsLocationOnEdgeOrPath(Position point, IEnumerable<Position> poly, bool closed,
-                                                  bool geodesic, double toleranceEarth) 
+        static bool IsLocationOnEdgeOrPath(Position point, IEnumerable<Position> poly, bool closed,
+                                                 bool geodesic, double toleranceEarth)
         {
             int size = poly.Count();
             if (size == 0) return false;
-            
+
             double tolerance = toleranceEarth / GmsMathUtils.EarthRadius;
             double havTolerance = GmsMathUtils.Hav(tolerance);
             double lat3 = point.Latitude.ToRadian();
             double lng3 = point.Longitude.ToRadian();
-            Position prev = poly.ElementAt(closed ? size - 1 : 0); 
+            Position prev = poly.ElementAt(closed ? size - 1 : 0);
             double lat1 = prev.Latitude.ToRadian();
             double lng1 = prev.Longitude.ToRadian();
-            if (geodesic) 
+            if (geodesic)
             {
-                foreach(var point2 in poly)
+                foreach (var point2 in poly)
                 {
                     double lat2 = point2.Latitude.ToRadian();
                     double lng2 = point2.Longitude.ToRadian();
-                    if (IsOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance)) {
+                    if (IsOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance))
+                    {
                         return true;
                     }
                     lat1 = lat2;
                     lng1 = lng2;
                 }
-            } 
-            else 
+            }
+            else
             {
                 // We project the points to mercator space, where the Rhumb segment is a straight line,
                 // and compute the geodesic distance between point3 and the closest point on the
@@ -268,12 +272,13 @@ namespace Iratrips.Mapkit.Utilities
                 double y3 = GmsMathUtils.Mercator(lat3);
                 double[] xTry = new double[3];
 
-                foreach(var point2 in poly)
+                foreach (var point2 in poly)
                 {
                     double lat2 = point2.Latitude.ToRadian();
                     double y2 = GmsMathUtils.Mercator(lat2);
                     double lng2 = point2.Longitude.ToRadian();
-                    if (Math.Max(lat1, lat2) >= minAcceptable && Math.Min(lat1, lat2) <= maxAcceptable) {
+                    if (Math.Max(lat1, lat2) >= minAcceptable && Math.Min(lat1, lat2) <= maxAcceptable)
+                    {
                         // We offset longitudes by -lng1; the implicit x1 is 0.
                         double x2 = GmsMathUtils.Wrap(lng2 - lng1, -Math.PI, Math.PI);
                         double x3Base = GmsMathUtils.Wrap(lng3 - lng1, -Math.PI, Math.PI);
@@ -282,7 +287,7 @@ namespace Iratrips.Mapkit.Utilities
                         xTry[1] = x3Base + 2 * Math.PI;
                         xTry[2] = x3Base - 2 * Math.PI;
 
-                        foreach(var x3 in xTry)
+                        foreach (var x3 in xTry)
                         {
                             double dy = y2 - y1;
                             double len2 = x2 * x2 + dy * dy;
@@ -291,7 +296,8 @@ namespace Iratrips.Mapkit.Utilities
                             double yClosest = y1 + t * dy;
                             double latClosest = GmsMathUtils.InverseMercator(yClosest);
                             double havDist = GmsMathUtils.HavDistance(lat3, latClosest, x3 - xClosest);
-                            if (havDist < havTolerance) {
+                            if (havDist < havTolerance)
+                            {
                                 return true;
                             }
                         }
@@ -303,8 +309,85 @@ namespace Iratrips.Mapkit.Utilities
             }
             return false;
         }
-         static bool IsOnSegmentGC(double lat1, double lng1, double lat2, double lng2,
-                                         double lat3, double lng3, double havTolerance)
+
+        public static int LocationIndexOnPath(Position point, List<Position> poly, bool closed, bool geodesic, double tolerance)
+        {
+            int size = poly.Count();
+            if (size == 0) return -1;
+
+            double havTolerance = GmsMathUtils.Hav(tolerance);
+            double lat3 = point.Latitude.ToRadian();
+            double lng3 = point.Longitude.ToRadian();
+            Position prev = poly.ElementAt(closed ? size - 1 : 0);
+            double lat1 = prev.Latitude.ToRadian();
+            double lng1 = prev.Longitude.ToRadian();
+            if (geodesic)
+            {
+                for (var i = 0; i < poly.Count; i++)
+                {
+                    var point2 = poly.ElementAt(i);
+                    double lat2 = point2.Latitude.ToRadian();
+                    double lng2 = point2.Longitude.ToRadian();
+                    if (IsOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance))
+                        return i;
+
+                    lat1 = lat2;
+                    lng1 = lng2;
+                }
+            }
+            else
+            {
+                // We project the points to mercator space, where the Rhumb segment is a straight line,
+                // and compute the geodesic distance between point3 and the closest point on the
+                // segment. This method is an approximation, because it uses "closest" in mercator
+                // space which is not "closest" on the sphere -- but the error is small because
+                // "tolerance" is small.
+                double minAcceptable = lat3 - tolerance;
+                double maxAcceptable = lat3 + tolerance;
+                double y1 = GmsMathUtils.Mercator(lat1);
+                double y3 = GmsMathUtils.Mercator(lat3);
+                double[] xTry = new double[3];
+
+                for (var i = 0; i < poly.Count; i++)
+                {
+                    var point2 = poly.ElementAt(i);
+                    double lat2 = point2.Latitude.ToRadian();
+                    double y2 = GmsMathUtils.Mercator(lat2);
+                    double lng2 = point2.Longitude.ToRadian();
+                    if (Math.Max(lat1, lat2) >= minAcceptable && Math.Min(lat1, lat2) <= maxAcceptable)
+                    {
+                        // We offset longitudes by -lng1; the implicit x1 is 0.
+                        double x2 = GmsMathUtils.Wrap(lng2 - lng1, -Math.PI, Math.PI);
+                        double x3Base = GmsMathUtils.Wrap(lng3 - lng1, -Math.PI, Math.PI);
+                        xTry[0] = x3Base;
+                        // Also explore wrapping of x3Base around the world in both directions.
+                        xTry[1] = x3Base + 2 * Math.PI;
+                        xTry[2] = x3Base - 2 * Math.PI;
+
+                        foreach (var x3 in xTry)
+                        {
+                            double dy = y2 - y1;
+                            double len2 = x2 * x2 + dy * dy;
+                            double t = len2 <= 0 ? 0 : GmsMathUtils.Clamp((x3 * x2 + (y3 - y1) * dy) / len2, 0, 1);
+                            double xClosest = t * x2;
+                            double yClosest = y1 + t * dy;
+                            double latClosest = GmsMathUtils.InverseMercator(yClosest);
+                            double havDist = GmsMathUtils.HavDistance(lat3, latClosest, x3 - xClosest);
+                            if (havDist < havTolerance)
+                                return i;
+                        }
+                    }
+                    lat1 = lat2;
+                    lng1 = lng2;
+                    y1 = y2;
+                }
+            }
+            
+            return -1;
+        }
+
+        static bool IsOnSegmentGC(double lat1, double lng1, double lat2, double lng2,
+                                        double lat3, double lng3, double havTolerance)
         {
             double havDist13 = GmsMathUtils.HavDistance(lat1, lat3, lng1 - lng3);
             if (havDist13 <= havTolerance)
@@ -350,8 +433,8 @@ namespace Iratrips.Mapkit.Utilities
         /// <param name="lat3"></param>
         /// <param name="lng3"></param>
         /// <returns></returns>
-         static double SinDeltaBearing(double lat1, double lng1, double lat2, double lng2,
-                                          double lat3, double lng3)
+        static double SinDeltaBearing(double lat1, double lng1, double lat2, double lng2,
+                                         double lat3, double lng3)
         {
             double sinLat1 = Math.Sin(lat1);
             double cosLat2 = Math.Cos(lat2);
