@@ -23,7 +23,7 @@ namespace Iratrips.Mapkit.Utilities
     /// https://github.com/googlemaps/android-maps-utils/blob/dba3b0d8a9657ebab8c67a4f50bd731437a229bc/library/src/com/google/maps/android/SphericalUtil.java
     /// </summary>
     public static class GmsSphericalUtil
-    {   
+    {
         /// <summary>
         ///  Returns the LatLng resulting from moving a distance from an origin
         ///  in the specified heading (expressed in degrees clockwise from north).
@@ -48,6 +48,50 @@ namespace Iratrips.Mapkit.Utilities
                     sinDistance * cosFromLat * Math.Sin(heading),
                     cosDistance - sinFromLat * sinLat);
             return new Position(Math.Asin(sinLat).ToDegrees(), (fromLng + dLng).ToDegrees());
+        }
+
+        /**
+    * Returns distance on the unit sphere; the arguments are in radians.
+    */
+        private static double DistanceRadians(double lat1, double lng1, double lat2, double lng2)
+        {
+            return GmsMathUtils.ArcHav(GmsMathUtils.HavDistance(lat1, lat2, lng1 - lng2));
+        }
+
+        /**
+         * Returns the angle between two LatLngs, in radians. This is the same as the distance
+         * on the unit sphere.
+         */
+        private static double ComputeAngleBetween(Position from, Position to)
+        {
+            return DistanceRadians(from.Latitude.ToRadian(), from.Longitude.ToRadian(), to.Latitude.ToRadian(), to.Longitude.ToRadian());
+        }
+
+        /**
+         * Returns the distance between two LatLngs, in meters.
+         */
+        public static double ComputeDistanceBetween(Position from, Position to)
+        {
+            return ComputeAngleBetween(from, to) * GmsMathUtils.EarthRadius;
+        }
+
+        /**
+     * Returns the heading from one LatLng to another LatLng. Headings are
+     * expressed in degrees clockwise from North within the range [-180,180).
+     * @return The heading in degrees clockwise from north.
+     */
+        public static double ComputeHeading(Position from, Position to)
+        {
+            // http://williams.best.vwh.net/avform.htm#Crs
+            double fromLat = from.Latitude.ToRadian();
+            double fromLng = from.Longitude.ToRadian();
+            double toLat = to.Latitude.ToRadian();
+            double toLng = to.Longitude.ToRadian();
+            double dLng = toLng - fromLng;
+            double heading = Math.Atan2(
+                Math.Sin(dLng) * Math.Cos(toLat),
+                Math.Cos(fromLat) * Math.Sin(toLat) - Math.Sin(fromLat) * Math.Cos(toLat) * Math.Cos(dLng));
+            return GmsMathUtils.Wrap(heading.ToDegrees(), -180, 180);
         }
     }
 }

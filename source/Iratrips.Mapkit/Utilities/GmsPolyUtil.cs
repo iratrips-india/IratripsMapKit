@@ -310,11 +310,12 @@ namespace Iratrips.Mapkit.Utilities
             return false;
         }
 
-        public static int LocationIndexOnPath(Position point, List<Position> poly, bool closed, bool geodesic, double tolerance)
+        public static int LocationIndexOnPath(Position point, List<Position> poly, bool closed, bool geodesic, double toleranceEarth)
         {
             int size = poly.Count();
             if (size == 0) return -1;
 
+            double tolerance = toleranceEarth / GmsMathUtils.EarthRadius;
             double havTolerance = GmsMathUtils.Hav(tolerance);
             double lat3 = point.Latitude.ToRadian();
             double lng3 = point.Longitude.ToRadian();
@@ -329,7 +330,7 @@ namespace Iratrips.Mapkit.Utilities
                     double lat2 = point2.Latitude.ToRadian();
                     double lng2 = point2.Longitude.ToRadian();
                     if (IsOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance))
-                        return i;
+                        return Math.Max(0, i - 1);
 
                     lat1 = lat2;
                     lng1 = lng2;
@@ -374,7 +375,7 @@ namespace Iratrips.Mapkit.Utilities
                             double latClosest = GmsMathUtils.InverseMercator(yClosest);
                             double havDist = GmsMathUtils.HavDistance(lat3, latClosest, x3 - xClosest);
                             if (havDist < havTolerance)
-                                return i;
+                                return Math.Max(0, i - 1);
                         }
                     }
                     lat1 = lat2;
@@ -382,7 +383,7 @@ namespace Iratrips.Mapkit.Utilities
                     y1 = y2;
                 }
             }
-            
+
             return -1;
         }
 
@@ -451,5 +452,37 @@ namespace Iratrips.Mapkit.Utilities
             return denom <= 0 ? 1 : (a * d - b * c) / Math.Sqrt(denom);
         }
 
+        public static double DistanceToLine(Position p, Position start, Position end)
+        {
+            if (start.Equals(end))
+            {
+                return GmsSphericalUtil.ComputeDistanceBetween(end, p);
+            }
+
+            // Implementation of http://paulbourke.net/geometry/pointlineplane/ or http://geomalgorithms.com/a02-_lines.html
+            double s0lat = p.Latitude.ToRadian();
+            double s0lng = p.Longitude.ToRadian();
+            double s1lat = start.Latitude.ToRadian();
+            double s1lng = start.Longitude.ToRadian();
+            double s2lat = end.Latitude.ToRadian();
+            double s2lng = end.Longitude.ToRadian();
+
+            double lonCorrection = Math.Cos(s1lat);
+            double s2s1lat = s2lat - s1lat;
+            double s2s1lng = (s2lng - s1lng) * lonCorrection;
+            double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lonCorrection * s2s1lng)
+                             / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
+            if (u <= 0)
+            {
+                return GmsSphericalUtil.ComputeDistanceBetween(p, start);
+            }
+            if (u >= 1)
+            {
+                return GmsSphericalUtil.ComputeDistanceBetween(p, end);
+            }
+
+            Position su = new Position(start.Latitude + u * (end.Latitude - start.Latitude), start.Longitude + u * (end.Longitude - start.Longitude));
+            return GmsSphericalUtil.ComputeDistanceBetween(p, su);
+        }
     }
 }
