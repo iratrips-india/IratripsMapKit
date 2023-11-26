@@ -5,6 +5,7 @@ using Android.Gms.Maps.Model;
 using Android.Gms.Maps.Utils;
 using Android.Gms.Maps.Utils.Clustering;
 using Android.Graphics;
+using Android.Media;
 using Android.OS;
 using Android.Widget;
 using Iratrips.Mapkit;
@@ -162,6 +163,56 @@ namespace Iratrips.Mapkit.Droid
                 }
                 if (_googleMap != null)
                 {
+                    if (_polylines != null)
+                    {
+                        foreach (var line in _polylines)
+                        {
+                            line.Key.PropertyChanged -= OnLinePropertyChanged;
+                            line.Value.Remove();
+                        }
+                        _polylines.Clear();
+                    }
+
+                    if (_routes != null)
+                    {
+                        foreach (var route in _routes)
+                        {
+                            route.Key.PropertyChanged -= OnRoutePropertyChanged;
+                            route.Value.Remove();
+                        }
+                        _routes.Clear();
+                    }
+
+                    if (_circles != null)
+                    {
+                        foreach (var circle in _circles)
+                        {
+                            circle.Key.PropertyChanged -= CirclePropertyChanged;
+                            circle.Value.Remove();
+                        }
+                        _circles.Clear();
+                    }
+
+                    if (_polygons != null)
+                    {
+                        foreach (var polygon in _polygons)
+                        {
+                            polygon.Key.PropertyChanged -= OnPolygonPropertyChanged;
+                            polygon.Value.Remove();
+                        }
+                        _polygons.Clear();
+                    }
+
+                    if (_markers != null)
+                    {
+                        foreach (var marker in _markers)
+                        {
+                            marker.Key.PropertyChanged -= OnPinPropertyChanged;
+                            marker.Value.Marker?.Remove();
+                        }
+                        _markers.Clear();
+                    }
+
                     _googleMap.MarkerClick -= OnMarkerClick;
                     _googleMap.MapClick -= OnMapClick;
                     _googleMap.MapLongClick -= OnMapLongClick;
@@ -421,6 +472,25 @@ namespace Iratrips.Mapkit.Droid
                         FormsMap.MapCenter.Latitude))
                     {
                         MapFunctions.RaiseRouteClicked(route);
+                        return;
+                    }
+                }
+            }
+
+            if (FormsMap.Polylines != null)
+            {
+                foreach (var poly in FormsMap.Polylines)
+                {
+                    var internalPolyline = _polylines[poly];
+
+                    if (GmsPolyUtil.IsLocationOnPath(
+                            position,
+                            internalPolyline.Points.Select(i => i.ToPosition()),
+                            true,
+                            (int)_googleMap.CameraPosition.Zoom,
+                            FormsMap.MapCenter.Latitude))
+                    {
+                        MapFunctions.RaisePolylineClicked(poly);
                         return;
                     }
                 }

@@ -34,7 +34,6 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="bearing">Bearing value computed using GetBearing function.</param>
         void MoveToCurrentForDriving(Position current, double bearing);
 
-
         /// <summary>
         /// Returns the snap position which can be use to show current location on the road.
         /// </summary>

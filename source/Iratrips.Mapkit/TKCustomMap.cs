@@ -39,6 +39,10 @@ namespace Iratrips.Mapkit
         /// </summary>
         public event EventHandler<GenericEventArgs<TKRoute>> RouteClicked;
         /// <summary>
+        /// Event raised when a route gets tapped
+        /// </summary>
+        public event EventHandler<GenericEventArgs<TKPolyline>> PolylineClicked;
+        /// <summary>
         /// Event raised when a route calculation finished successfully
         /// </summary>
         public event EventHandler<GenericEventArgs<TKRoute>> RouteCalculationFinished;
@@ -193,13 +197,17 @@ namespace Iratrips.Mapkit
             typeof(MapSpan),
             typeof(TKCustomMap),
             defaultBindingMode: BindingMode.TwoWay);
+
+
         /// <summary>
-        /// Bindable Property of <see cref="Routes"/>
+        /// Dont use this property.
         /// </summary>
+
         public static readonly BindableProperty RoutesProperty = BindableProperty.Create(
             nameof(Routes),
             typeof(IEnumerable<TKRoute>),
             typeof(TKCustomMap));
+
         /// <summary>
         /// Bindable Property of <see cref="RouteClickedCommand"/>
         /// </summary>
@@ -727,6 +735,18 @@ namespace Iratrips.Mapkit
 
             RaiseCommand(RouteClickedCommand, route);
         }
+
+        /// <summary>
+        /// Raises <see cref="RouteClicked"/>
+        /// </summary>
+        /// <param name="route">The tapped route</param>
+        protected void OnPolylineClicked(TKPolyline poly)
+        {
+            PolylineClicked?.Invoke(this, new GenericEventArgs<TKPolyline>(poly));
+
+            RaiseCommand(RouteClickedCommand, poly);
+        }
+
         /// <summary>
         /// Raises <see cref="RouteCalculationFinished"/>
         /// </summary>
@@ -831,6 +851,9 @@ namespace Iratrips.Mapkit
         /// <inheritdoc/>
         void IMapFunctions.RaiseRouteClicked(TKRoute route) => OnRouteClicked(route);
         /// <inheritdoc/>
+        void IMapFunctions.RaisePolylineClicked(TKPolyline poly) => OnPolylineClicked(poly);
+
+        /// <inheritdoc/>
         void IMapFunctions.RaiseRouteCalculationFinished(TKRoute route) => OnRouteCalculationFinished(route);
         /// <inheritdoc/>
         void IMapFunctions.RaiseRouteCalculationFailed(RouteCalculationError route) => OnRouteCalculationFailed(route);
@@ -846,6 +869,5 @@ namespace Iratrips.Mapkit
 
         /// <inheritdoc/>
         void IMapFunctions.RaiseCameraMoveStarted() => OnCameraMoveStarted();
-
     }
 }

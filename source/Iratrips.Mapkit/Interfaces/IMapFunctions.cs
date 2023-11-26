@@ -44,6 +44,11 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="route">The route which got tapped</param>
         void RaiseRouteClicked(TKRoute route);
         /// <summary>
+        /// Raises the polyline clicked event and command
+        /// </summary>
+        /// <param name="poly">The polyline which got tapped</param>
+        void RaisePolylineClicked(TKPolyline poly);
+        /// <summary>
         /// Raises the route calculation finished event and command
         /// </summary>
         /// <param name="route">The route</param>
@@ -53,6 +58,7 @@ namespace Iratrips.Mapkit.Interfaces
         /// </summary>
         /// <param name="route">The route</param>
         void RaiseRouteCalculationFailed(RouteCalculationError route);
+
         /// <summary>
         /// Raises the pins ready event and command
         /// </summary>
