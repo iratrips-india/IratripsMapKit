@@ -87,5 +87,11 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="screenLocations">The screen locations(pixel)</param>
         /// <returns>A collection of <see cref="Position"/></returns>
         IEnumerable<Position> ScreenLocationsToGeocoordinates(params Point[] screenLocations);
+
+
+        /// <summary>
+        /// Manually clean up the renderer
+        /// </summary>
+        void CleanUp();
     }
 }

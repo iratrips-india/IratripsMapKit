@@ -1,11 +1,9 @@
-using Android.Animation;
 using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Gms.Maps.Utils;
 using Android.Gms.Maps.Utils.Clustering;
 using Android.Graphics;
-using Android.Media;
 using Android.OS;
 using Android.Widget;
 using Iratrips.Mapkit;
@@ -155,84 +153,99 @@ namespace Iratrips.Mapkit.Droid
             _disposed = true;
 
             if (disposing)
-            {
-                if (FormsMap != null)
-                {
-                    FormsMap.PropertyChanged -= FormsMapPropertyChanged;
-                    UnregisterCollections(FormsMap);
-                }
-                if (_googleMap != null)
-                {
-                    if (_polylines != null)
-                    {
-                        foreach (var line in _polylines)
-                        {
-                            line.Key.PropertyChanged -= OnLinePropertyChanged;
-                            line.Value.Remove();
-                        }
-                        _polylines.Clear();
-                    }
-
-                    if (_routes != null)
-                    {
-                        foreach (var route in _routes)
-                        {
-                            route.Key.PropertyChanged -= OnRoutePropertyChanged;
-                            route.Value.Remove();
-                        }
-                        _routes.Clear();
-                    }
-
-                    if (_circles != null)
-                    {
-                        foreach (var circle in _circles)
-                        {
-                            circle.Key.PropertyChanged -= CirclePropertyChanged;
-                            circle.Value.Remove();
-                        }
-                        _circles.Clear();
-                    }
-
-                    if (_polygons != null)
-                    {
-                        foreach (var polygon in _polygons)
-                        {
-                            polygon.Key.PropertyChanged -= OnPolygonPropertyChanged;
-                            polygon.Value.Remove();
-                        }
-                        _polygons.Clear();
-                    }
-
-                    if (_markers != null)
-                    {
-                        foreach (var marker in _markers)
-                        {
-                            marker.Key.PropertyChanged -= OnPinPropertyChanged;
-                            marker.Value.Marker?.Remove();
-                        }
-                        _markers.Clear();
-                    }
-
-                    _googleMap.MarkerClick -= OnMarkerClick;
-                    _googleMap.MapClick -= OnMapClick;
-                    _googleMap.MapLongClick -= OnMapLongClick;
-                    _googleMap.MarkerDragEnd -= OnMarkerDragEnd;
-                    _googleMap.MarkerDrag -= OnMarkerDrag;
-                    _googleMap.MarkerDragStart -= OnMarkerDragStart;
-                    _googleMap.InfoWindowClick -= OnInfoWindowClick;
-                    _googleMap.MyLocationChange -= OnUserLocationChange;
-                    _googleMap.SetOnCameraIdleListener(null);
-                    _googleMap.SetOnCameraMoveStartedListener(null);
-                    _googleMap.SetInfoWindowAdapter(null);
-                    _clusterManager?.Dispose();
-                    _clusterManager = null;
-                    _googleMap.Dispose();
-                    _googleMap = null;
-                }
-            }
+                CleanUp();
 
             base.Dispose(disposing);
         }
+
+        public void CleanUp()
+        {
+            if (FormsMap != null)
+            {
+                FormsMap.PropertyChanged -= FormsMapPropertyChanged;
+                UnregisterCollections(FormsMap);
+            }
+
+            if (_googleMap != null)
+            {
+                _tempRouteList?.Clear();
+                _selectedMarker = null;
+
+                if (_polylines != null)
+                {
+                    foreach (var line in _polylines)
+                    {
+                        line.Key.PropertyChanged -= OnLinePropertyChanged;
+                        line.Value.Remove();
+                    }
+
+                    _polylines.Clear();
+                }
+
+                if (_routes != null)
+                {
+                    foreach (var route in _routes)
+                    {
+                        route.Key.PropertyChanged -= OnRoutePropertyChanged;
+                        route.Value.Remove();
+                    }
+
+                    _routes.Clear();
+                }
+
+                if (_circles != null)
+                {
+                    foreach (var circle in _circles)
+                    {
+                        circle.Key.PropertyChanged -= CirclePropertyChanged;
+                        circle.Value.Remove();
+                    }
+
+                    _circles.Clear();
+                }
+
+                if (_polygons != null)
+                {
+                    foreach (var polygon in _polygons)
+                    {
+                        polygon.Key.PropertyChanged -= OnPolygonPropertyChanged;
+                        polygon.Value.Remove();
+                    }
+
+                    _polygons.Clear();
+                }
+
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.Key.PropertyChanged -= OnPinPropertyChanged;
+                        marker.Value.Marker?.Remove();
+                    }
+
+                    _markers.Clear();
+                }
+
+                _googleMap.MarkerClick -= OnMarkerClick;
+                _googleMap.MapClick -= OnMapClick;
+                _googleMap.MapLongClick -= OnMapLongClick;
+                _googleMap.MarkerDragEnd -= OnMarkerDragEnd;
+                _googleMap.MarkerDrag -= OnMarkerDrag;
+                _googleMap.MarkerDragStart -= OnMarkerDragStart;
+                _googleMap.InfoWindowClick -= OnInfoWindowClick;
+                _googleMap.MyLocationChange -= OnUserLocationChange;
+                _googleMap.SetOnCameraIdleListener(null);
+                _googleMap.SetOnCameraMoveStartedListener(null);
+                _googleMap.SetInfoWindowAdapter(null);
+                _clusterManager?.Dispose();
+                _clusterManager = null;
+                _googleMap.Dispose();
+                _googleMap = null;
+                _snapShot = null;
+                _tileOverlay = null;
+            }
+        }
+
         /// <summary>
         /// When a property of the Forms map changed
         /// </summary>

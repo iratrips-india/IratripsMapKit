@@ -685,6 +685,12 @@ namespace Iratrips.Mapkit
         /// <param name="screenLocations">The screen locations(pixel)</param>
         /// <returns>A collection of <see cref="Position"/></returns>
         public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Point[] screenLocations) => MapFunctions.ScreenLocationsToGeocoordinates(screenLocations);
+
+        /// <summary>
+        /// Manually cleanup the platform renderer.
+        /// </summary>
+        public void CleanUp() => MapFunctions.CleanUp();
+
         /// <summary>
         /// Raises <see cref="PinSelected"/>
         /// </summary>
