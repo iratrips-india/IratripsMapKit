@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms.Shapes;
@@ -454,18 +455,25 @@ namespace Iratrips.Mapkit.Utilities
 
         public static double DistanceToLine(Position p, Position start, Position end)
         {
-            if (start.Equals(end))
+            return DistanceToLine(p.Latitude, p.Longitude, start.Latitude, start.Longitude, end.Latitude,
+                end.Longitude);
+        }
+
+
+        public static double DistanceToLine(double pLat, double pLng, double startLat, double startLng, double endLat, double endLng)
+        {
+            if (Equals(startLat, endLat) && Equals(startLng, endLng))
             {
-                return GmsSphericalUtil.ComputeDistanceBetween(end, p);
+                return GmsSphericalUtil.ComputeDistanceBetween(endLat, endLng, pLat, pLng);
             }
 
             // Implementation of http://paulbourke.net/geometry/pointlineplane/ or http://geomalgorithms.com/a02-_lines.html
-            double s0lat = p.Latitude.ToRadian();
-            double s0lng = p.Longitude.ToRadian();
-            double s1lat = start.Latitude.ToRadian();
-            double s1lng = start.Longitude.ToRadian();
-            double s2lat = end.Latitude.ToRadian();
-            double s2lng = end.Longitude.ToRadian();
+            double s0lat = pLat.ToRadian();
+            double s0lng = pLng.ToRadian();
+            double s1lat = startLat.ToRadian();
+            double s1lng = startLng.ToRadian();
+            double s2lat = endLat.ToRadian();
+            double s2lng = endLng.ToRadian();
 
             double lonCorrection = Math.Cos(s1lat);
             double s2s1lat = s2lat - s1lat;
@@ -474,15 +482,17 @@ namespace Iratrips.Mapkit.Utilities
                              / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
             if (u <= 0)
             {
-                return GmsSphericalUtil.ComputeDistanceBetween(p, start);
+                return GmsSphericalUtil.ComputeDistanceBetween(pLat, pLng, startLat, startLng);
             }
             if (u >= 1)
             {
-                return GmsSphericalUtil.ComputeDistanceBetween(p, end);
+                return GmsSphericalUtil.ComputeDistanceBetween(pLat, pLng, endLat, endLng);
             }
 
-            Position su = new Position(start.Latitude + u * (end.Latitude - start.Latitude), start.Longitude + u * (end.Longitude - start.Longitude));
-            return GmsSphericalUtil.ComputeDistanceBetween(p, su);
+            var suLat = startLat + u * (endLat - startLat);
+            var suLng = startLng + u * (endLng - startLng);
+
+            return GmsSphericalUtil.ComputeDistanceBetween(pLat, pLng, suLat, suLng);
         }
     }
 }

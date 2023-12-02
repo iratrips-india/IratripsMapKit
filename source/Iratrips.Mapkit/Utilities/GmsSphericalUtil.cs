@@ -67,12 +67,22 @@ namespace Iratrips.Mapkit.Utilities
             return DistanceRadians(from.Latitude.ToRadian(), from.Longitude.ToRadian(), to.Latitude.ToRadian(), to.Longitude.ToRadian());
         }
 
+        private static double ComputeAngleBetween(double fromLat, double fromLng, double toLat, double toLng)
+        {
+            return DistanceRadians(fromLat.ToRadian(), fromLng.ToRadian(), toLat.ToRadian(), toLng.ToRadian());
+        }
+
         /**
          * Returns the distance between two LatLngs, in meters.
          */
         public static double ComputeDistanceBetween(Position from, Position to)
         {
             return ComputeAngleBetween(from, to) * GmsMathUtils.EarthRadius;
+        }
+
+        public static double ComputeDistanceBetween(double fromLat, double fromLng, double toLat, double toLng)
+        {
+            return ComputeAngleBetween(fromLat, fromLng, toLat, toLng) * GmsMathUtils.EarthRadius;
         }
 
         /**
