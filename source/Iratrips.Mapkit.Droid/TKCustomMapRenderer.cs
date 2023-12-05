@@ -221,6 +221,7 @@ namespace Iratrips.Mapkit.Droid
                     {
                         marker.Key.PropertyChanged -= OnPinPropertyChanged;
                         marker.Value.Marker?.Remove();
+                        marker.Value.CleanUp();
                     }
 
                     _markers.Clear();

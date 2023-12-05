@@ -6,10 +6,7 @@ using Android.Gms.Maps.Utils.Clustering;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Android.OS;
-using Java.Lang;
 using Xamarin.Forms.Platform.Android;
 
 namespace Iratrips.Mapkit.Droid
@@ -353,9 +350,37 @@ namespace Iratrips.Mapkit.Droid
             }
         }
 
+        public void CleanUp()
+        {
+            if (_pinAnimatorUpdateListener != null)
+            {
+                _pinAnimatorUpdateListener.CleanUp();
+                _pinAnimatorUpdateListener = null;
+            }
+
+            if (_animatorListener != null)
+            {
+                _animatorListener.CleanUp();
+                _animatorListener = null;
+            }
+
+            if (_pinAnimator != null)
+            {
+                _pinAnimator.RemoveAllListeners();
+                _pinAnimator.RemoveAllUpdateListeners();
+                _pinAnimator = null;
+            }
+
+            _furtherPoints = null;
+            _context = null;
+
+            Pin = null;
+            Marker = null;
+        }
+
         private class PinAnimatorUpdateListener : Java.Lang.Object, ValueAnimator.IAnimatorUpdateListener
         {
-            private readonly Marker _marker;
+            private Marker _marker;
 
             public PinAnimatorUpdateListener(Marker marker)
             {
@@ -372,11 +397,17 @@ namespace Iratrips.Mapkit.Droid
                 if (change > 0)
                     _marker.Position = SphericalUtil.ComputeOffset(InitialPosition, change, CurrentBearing);
             }
+
+            public void CleanUp()
+            {
+                _marker = null;
+            }
+
         }
 
         internal class AnimatorListener : Java.Lang.Object, Animator.IAnimatorListener
         {
-            private readonly TKMarker _marker;
+            private TKMarker _marker;
 
             public LatLng EndPosition { get; set; }
 
@@ -404,6 +435,11 @@ namespace Iratrips.Mapkit.Droid
             public void OnAnimationStart(Animator animation)
             {
 
+            }
+
+            public void CleanUp()
+            {
+                _marker = null;
             }
         }
 

@@ -311,7 +311,7 @@ namespace Iratrips.Mapkit.Utilities
             return false;
         }
 
-        public static int LocationIndexOnPath(Position point, List<Position> poly, bool closed, bool geodesic, double toleranceEarth)
+        public static int LocationIndexOnPath(Position point, List<Position> poly, bool closed, bool geodesic, double toleranceEarth, int startIndex)
         {
             int size = poly.Count();
             if (size == 0) return -1;
@@ -320,18 +320,18 @@ namespace Iratrips.Mapkit.Utilities
             double havTolerance = GmsMathUtils.Hav(tolerance);
             double lat3 = point.Latitude.ToRadian();
             double lng3 = point.Longitude.ToRadian();
-            Position prev = poly.ElementAt(closed ? size - 1 : 0);
+            Position prev = poly.ElementAt(closed ? size - 1 : startIndex);
             double lat1 = prev.Latitude.ToRadian();
             double lng1 = prev.Longitude.ToRadian();
             if (geodesic)
             {
-                for (var i = 0; i < poly.Count; i++)
+                for (var i = startIndex; i < poly.Count; i++)
                 {
                     var point2 = poly.ElementAt(i);
                     double lat2 = point2.Latitude.ToRadian();
                     double lng2 = point2.Longitude.ToRadian();
                     if (IsOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance))
-                        return Math.Max(0, i - 1);
+                        return Math.Max(startIndex, i - 1);
 
                     lat1 = lat2;
                     lng1 = lng2;
@@ -350,7 +350,7 @@ namespace Iratrips.Mapkit.Utilities
                 double y3 = GmsMathUtils.Mercator(lat3);
                 double[] xTry = new double[3];
 
-                for (var i = 0; i < poly.Count; i++)
+                for (var i = startIndex; i < poly.Count; i++)
                 {
                     var point2 = poly.ElementAt(i);
                     double lat2 = point2.Latitude.ToRadian();
@@ -376,7 +376,7 @@ namespace Iratrips.Mapkit.Utilities
                             double latClosest = GmsMathUtils.InverseMercator(yClosest);
                             double havDist = GmsMathUtils.HavDistance(lat3, latClosest, x3 - xClosest);
                             if (havDist < havTolerance)
-                                return Math.Max(0, i - 1);
+                                return Math.Max(startIndex, i - 1);
                         }
                     }
                     lat1 = lat2;
