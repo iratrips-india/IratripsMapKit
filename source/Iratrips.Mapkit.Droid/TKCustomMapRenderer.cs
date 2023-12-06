@@ -1526,25 +1526,18 @@ namespace Iratrips.Mapkit.Droid
         ///<inheritdoc/>
         public void MoveToMapRegion(MapSpan region, bool animate)
         {
-            try
-            {
-                if (_googleMap == null) return;
+            if (_googleMap == null) return;
 
-                if (region == null) return;
+            if (region == null) return;
 
-                var bounds = BoundsFromMapSpans(region);
-                if (bounds == null) return;
-                var cam = CameraUpdateFactory.NewLatLngBounds(bounds, 0);
+            var bounds = BoundsFromMapSpans(region);
+            if (bounds == null) return;
+            var cam = CameraUpdateFactory.NewLatLngBounds(bounds, 0);
 
-                if (animate && _isInitialized)
-                    _googleMap.AnimateCamera(cam);
-                else
-                    _googleMap.MoveCamera(cam);
-            }
-            catch (Exception ex)
-            {
-                Android.Util.Log.Error("Xamarin.Forms.Map.Android", ex.ToString());
-            }
+            if (animate && _isInitialized)
+                _googleMap.AnimateCamera(cam);
+            else if (_isInitialized)
+                _googleMap.MoveCamera(cam);
         }
 
         //https://stackoverflow.com/questions/65482783/snap-markers-to-nearest-polyline-point-google-maps-flutter/73684671#73684671
@@ -1744,7 +1737,7 @@ namespace Iratrips.Mapkit.Droid
             marker.AnimateMarkerPosition(newPosition);
         }
 
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions)
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, List<Position> nextPositions)
         {
             if (!_markers.TryGetValue(pin, out var marker))
                 return;

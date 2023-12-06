@@ -659,7 +659,7 @@ namespace Iratrips.Mapkit
         /// <param name="speed">Current speed in meters / second</param>
         /// <param name="currentPosition">Current position</param>
         /// <param name="nextPositions">Next few positions</param>
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions) => MapFunctions.AnimateMarkerPosition(pin, speed, currentPosition, nextPositions);
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, List<Position> nextPositions) => MapFunctions.AnimateMarkerPosition(pin, speed, currentPosition, nextPositions);
 
         /// <summary>
         /// Stop marker position animation.

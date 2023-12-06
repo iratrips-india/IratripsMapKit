@@ -67,7 +67,7 @@ namespace Iratrips.Mapkit.Interfaces
         /// <param name="speed">Current speed in meters / second</param>
         /// <param name="currentPosition">Current position</param>
         /// <param name="nextPositions">Next few positions</param>
-        void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, IList<Position> nextPositions);
+        void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, List<Position> nextPositions);
 
         /// <summary>
         /// Stop marker position animation.
