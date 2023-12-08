@@ -1536,7 +1536,7 @@ namespace Iratrips.Mapkit.Droid
 
             if (animate && _isInitialized)
                 _googleMap.AnimateCamera(cam);
-            else if (_isInitialized)
+            else 
                 _googleMap.MoveCamera(cam);
         }
 

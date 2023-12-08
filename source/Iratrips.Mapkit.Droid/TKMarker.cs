@@ -277,29 +277,32 @@ namespace Iratrips.Mapkit.Droid
             _furtherPoints = furtherPoints;
             _furtherPointIndex = -1;
 
-            Android.Util.Log.Debug("MapKit", $"Starting Animation Distance: {SphericalUtil.ComputeLength(furtherPoints.Select(k => k.ToLatLng()).ToList())} meters");
+            Android.Util.Log.Debug("MapKit", $"Starting Animation with {furtherPoints.Count} points. {currentPosition.Latitude},{currentPosition.Longitude}, Speed: {speed}");
 
             InitAnimation();
 
-            var currentLatLng = currentPosition;
+            if (furtherPoints.Count == 1)
+            {
+                AnimateToNextPosition(currentPosition);
+                return;
+            }
 
             var heading1 = GmsSphericalUtil.ComputeHeading(this.Marker.Position.ToPosition(), _furtherPoints[0]);
             var heading2 = GmsSphericalUtil.ComputeHeading(_furtherPoints[0], _furtherPoints[1]);
             if (System.Math.Abs(heading2 - heading1) > 90)
             {
                 var polyIndex = LocationIndexOnLine(this.Marker.Position.ToPosition(), _furtherPoints);
-                if (polyIndex >= 0)
+                if (polyIndex >= 0 && _furtherPoints.Count > 1)
                 {
-                    var distance = GmsSphericalUtil.ComputeDistanceBetween(currentLatLng, _furtherPoints[0]);
+                    var distance = GmsSphericalUtil.ComputeDistanceBetween(currentPosition, _furtherPoints[0]);
                     if (polyIndex > 0)
                     {
-                        for (var i = 0; i <= polyIndex; i++)
+                        for (var i = 0; i < polyIndex; i++)
                             distance += GmsSphericalUtil.ComputeDistanceBetween(_furtherPoints[i], _furtherPoints[i + 1]);
                     }
 
+                    _furtherPointIndex = polyIndex;
                     distance += GmsSphericalUtil.ComputeDistanceBetween(_furtherPoints[polyIndex], _furtherPoints[polyIndex + 1]);
-                    _furtherPoints = _furtherPoints.Skip(polyIndex + 1).ToList();
-                    
                     AnimateToNextPosition(currentPosition, distance);
                 }
                 else
