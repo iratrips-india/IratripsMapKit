@@ -240,11 +240,15 @@ namespace Iratrips.Mapkit.Droid
 
             var currentMarkerPosition = this.Marker.Position.ToPosition();
             var remainingDistance = GmsSphericalUtil.ComputeDistanceBetween(currentMarkerPosition, newPosition);
+            if (remainingDistance <= 0)
+            {
+                this.Marker.Position = newPosition.ToLatLng();
+                return;
+            }
 
             Android.Util.Log.Debug("MapKit", $"Starting Animation till the new position with distance {remainingDistance} meters.");
 
             _pinAnimator.SetCurrentFraction(0);
-
             _animatorListener.EndPosition = newPosition;
             _pinAnimatorUpdateListener.InitialPosition = currentMarkerPosition;
             _pinAnimatorUpdateListener.TotalDistance = remainingDistance;

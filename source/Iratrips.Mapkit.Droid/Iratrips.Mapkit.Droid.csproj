@@ -62,10 +62,10 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.3.1.1" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.2515</Version>
+      <Version>5.0.0.2612</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Places">
-      <Version>117.0.0.7</Version>
+      <Version>117.0.0.8</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Google.Maps.Utils">
       <Version>1.0.3</Version>
