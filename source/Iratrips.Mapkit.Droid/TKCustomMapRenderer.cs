@@ -1135,7 +1135,7 @@ namespace Iratrips.Mapkit.Droid
             else
                 r = route.ProvidedRouteData;
 
-            if (r != null && r.Polyline.Positions != null && r.Polyline.Positions.Any())
+            if (r != null && r.Legs != null && r.Legs.Count() > 0)
             {
                 SetRouteData(route, r);
 
