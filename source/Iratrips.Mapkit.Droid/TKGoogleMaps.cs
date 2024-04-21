@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Gms.Common;
 using Android.Gms.Maps;
+using Android.Nfc;
 
 namespace Iratrips.Mapkit.Droid
 {
@@ -40,12 +41,12 @@ namespace Iratrips.Mapkit.Droid
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Google Play Services Not Found");
-                    Console.WriteLine("Exception: {0}", e);
+                    Android.Util.Log.Error("Iratrips", "Google Play Services Not Found");
+                    Android.Util.Log.Error("Iratrips", $"Exception: {e}");
                 }
             }
             else
-                Console.WriteLine("Google Play Services Not available");
+                Android.Util.Log.Info("Iratrips", "Google Play Services Not available");
         }
     }
 }
