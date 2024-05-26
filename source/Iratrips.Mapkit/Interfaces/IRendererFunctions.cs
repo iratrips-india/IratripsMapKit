@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 
 namespace Iratrips.Mapkit.Interfaces
@@ -86,7 +87,7 @@ namespace Iratrips.Mapkit.Interfaces
         /// </summary>
         /// <param name="screenLocations">The screen locations(pixel)</param>
         /// <returns>A collection of <see cref="Position"/></returns>
-        IEnumerable<Position> ScreenLocationsToGeocoordinates(params Point[] screenLocations);
+        IEnumerable<Position> ScreenLocationsToGeocoordinates(params Microsoft.Maui.Graphics.Point[] screenLocations);
 
 
         /// <summary>

@@ -7,6 +7,7 @@ using ObjCRuntime;
 using System.Threading;
 using System.Linq;
 using UIKit;
+using Microsoft.Maui.ApplicationModel;
 
 namespace Iratrips.Mapkit.iOS
 {

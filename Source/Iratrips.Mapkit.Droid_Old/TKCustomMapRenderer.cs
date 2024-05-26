@@ -21,10 +21,16 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
 using Color = Xamarin.Forms.Color;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.ApplicationModel;
 
+// TODO Xamarin.Forms.ExportRendererAttribute is not longer supported. For more details see https://github.com/dotnet/maui/wiki/Using-Custom-Renderers-in-.NET-MAUI
 [assembly: ExportRenderer(typeof(TKCustomMap), typeof(TKCustomMapRenderer))]
 namespace Iratrips.Mapkit.Droid
 {
@@ -354,7 +360,7 @@ namespace Iratrips.Mapkit.Droid
         {
             if (e.Location == null || FormsMap == null) return;
 
-            var newPosition = new Position(e.Location.Latitude, e.Location.Longitude);
+            var newPosition = new Location(e.Location.Latitude, e.Location.Longitude);
             MapFunctions.RaiseUserLocationChanged(newPosition);
         }
         /// <summary>
@@ -957,11 +963,11 @@ namespace Iratrips.Mapkit.Droid
             {
                 polygonOptions.Add(polygon.Coordinates.Select(i => i.ToLatLng()).ToArray());
             }
-            if (polygon.Color != Color.Default)
+            if (polygon.Color != null)
             {
                 polygonOptions.InvokeFillColor(polygon.Color.ToAndroid().ToArgb());
             }
-            if (polygon.StrokeColor != Color.Default)
+            if (polygon.StrokeColor != null)
             {
                 polygonOptions.InvokeStrokeColor(polygon.StrokeColor.ToAndroid().ToArgb());
             }
@@ -1038,11 +1044,11 @@ namespace Iratrips.Mapkit.Droid
             circleOptions.InvokeRadius(circle.Radius);
             circleOptions.InvokeCenter(circle.Center.ToLatLng());
 
-            if (circle.Color != Color.Default)
+            if (circle.Color != null)
             {
                 circleOptions.InvokeFillColor(circle.Color.ToAndroid().ToArgb());
             }
-            if (circle.StrokeColor != Color.Default)
+            if (circle.StrokeColor != null)
             {
                 circleOptions.InvokeStrokeColor(circle.StrokeColor.ToAndroid().ToArgb());
             }
@@ -1084,7 +1090,7 @@ namespace Iratrips.Mapkit.Droid
             line.PropertyChanged += OnLinePropertyChanged;
 
             var polylineOptions = new PolylineOptions();
-            if (line.Color != Color.Default)
+            if (line.Color != null)
             {
                 polylineOptions.InvokeColor(line.Color.ToAndroid().ToArgb());
             }
@@ -1141,7 +1147,7 @@ namespace Iratrips.Mapkit.Droid
 
                 var routeOptions = new PolylineOptions();
 
-                if (route.Color != Color.Default)
+                if (route.Color != null)
                 {
                     routeOptions.InvokeColor(route.Color.ToAndroid().ToArgb());
                 }
@@ -1210,9 +1216,9 @@ namespace Iratrips.Mapkit.Droid
                 MapSpan.FromCenterAndRadius(
                     latLngBounds.Center.ToPosition(),
                     Distance.FromKilometers(
-                        new Position(latLngBounds.Southwest.Latitude, latLngBounds.Southwest.Longitude)
+                        new Location(latLngBounds.Southwest.Latitude, latLngBounds.Southwest.Longitude)
                         .DistanceTo(
-                            new Position(latLngBounds.Northeast.Latitude, latLngBounds.Northeast.Longitude)) / 2)));
+                            new Location(latLngBounds.Northeast.Latitude, latLngBounds.Northeast.Longitude)) / 2)));
             routeFunctions.SetIsCalculated(true);
         }
         /// <summary>
@@ -1231,7 +1237,7 @@ namespace Iratrips.Mapkit.Droid
                 }
                 else
                 {
-                    if (pin.DefaultPinColor != Color.Default)
+                    if (pin.DefaultPinColor != null)
                     {
                         var hue = pin.DefaultPinColor.ToAndroid().GetHue();
                         bitmap = BitmapDescriptorFactory.DefaultMarker(Math.Min(hue, 359.99f));
@@ -1266,7 +1272,7 @@ namespace Iratrips.Mapkit.Droid
                 }
                 else
                 {
-                    if (pin.DefaultPinColor != Color.Default)
+                    if (pin.DefaultPinColor != null)
                     {
                         var hue = pin.DefaultPinColor.ToAndroid().GetHue();
                         bitmap = BitmapDescriptorFactory.DefaultMarker(hue);
@@ -1485,7 +1491,7 @@ namespace Iratrips.Mapkit.Droid
             var dlat = Math.Max(Math.Abs(ul.Latitude - lr.Latitude), Math.Abs(ur.Latitude - ll.Latitude));
             var dlong = Math.Max(Math.Abs(ul.Longitude - lr.Longitude), Math.Abs(ur.Longitude - ll.Longitude));
 
-            return new MapSpan(new Position(center.Latitude, center.Longitude), dlat, dlong);
+            return new MapSpan(new Location(center.Latitude, center.Longitude), dlat, dlong);
         }
         /// <inheritdoc/>
         public async Task<byte[]> GetSnapshot()
@@ -1509,7 +1515,7 @@ namespace Iratrips.Mapkit.Droid
             }
         }
         ///<inheritdoc/>
-        public void FitMapRegionToPositions(IEnumerable<Position> positions, bool animate = false, int padding = 0)
+        public void FitMapRegionToPositions(IEnumerable<Location> positions, bool animate = false, int padding = 0)
         {
             if (_googleMap == null) throw new InvalidOperationException("Map not ready");
             if (positions == null) throw new InvalidOperationException("positions can't be null");
@@ -1541,7 +1547,7 @@ namespace Iratrips.Mapkit.Droid
         }
 
         //https://stackoverflow.com/questions/65482783/snap-markers-to-nearest-polyline-point-google-maps-flutter/73684671#73684671
-        public Position GetSnapPosition(Position nearestPointOnRoute, Position nextPointOnRoute, Position currentPosition)
+        public Location GetSnapPosition(Location nearestPointOnRoute, Location nextPointOnRoute, Location currentPosition)
         {
             var closestPointLatLng = new LatLng(nearestPointOnRoute.Latitude, nearestPointOnRoute.Longitude);
             var nextPointLatLng = new LatLng(nextPointOnRoute.Latitude, nextPointOnRoute.Longitude);
@@ -1551,10 +1557,10 @@ namespace Iratrips.Mapkit.Droid
             var heading = SphericalUtil.ComputeHeading(closestPointLatLng, nextPointLatLng);
 
             var extrapolated = SphericalUtil.ComputeOffset(closestPointLatLng, distance, heading);
-            return new Position(extrapolated.Latitude, extrapolated.Longitude);
+            return new Location(extrapolated.Latitude, extrapolated.Longitude);
         }
 
-        public bool IsOnScreen(Position current)
+        public bool IsOnScreen(Location current)
         {
             LatLng newPos = new LatLng(current.Latitude, current.Longitude);
             var bounds = _googleMap.Projection.VisibleRegion.LatLngBounds;
@@ -1573,7 +1579,7 @@ namespace Iratrips.Mapkit.Droid
         }
 
         //https://stackoverflow.com/questions/52262064/animate-camera-to-position-and-set-panning-in-google-maps/52272870#52272870
-        public void MoveToCurrentForDriving(Position current, double bearing)
+        public void MoveToCurrentForDriving(Location current, double bearing)
         {
             if (_googleMap == null || !_isInitialized) return;
 
@@ -1643,7 +1649,7 @@ namespace Iratrips.Mapkit.Droid
                 _googleMap.MoveCamera(cam);
         }
         ///<inheritdoc/>
-        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Xamarin.Forms.Point[] screenLocations)
+        public IEnumerable<Location> ScreenLocationsToGeocoordinates(params Xamarin.Forms.Point[] screenLocations)
         {
             if (_googleMap == null)
                 throw new InvalidOperationException("Map not initialized");
@@ -1697,7 +1703,7 @@ namespace Iratrips.Mapkit.Droid
                 var renderer = Xamarin.Forms.Platform.Android.Platform.CreateRendererWithContext(xfView, this.Context);
                 var nativeView = renderer.View;
                 renderer.Tracker.UpdateLayout();
-                xfView.Layout(new Xamarin.Forms.Rectangle(0, 0, this.Context.ToPixels(xfView.WidthRequest), this.Context.ToPixels(xfView.HeightRequest)));
+                xfView.Layout(new Microsoft.Maui.Graphics.Rect(0, 0, this.Context.ToPixels(xfView.WidthRequest), this.Context.ToPixels(xfView.HeightRequest)));
 
                 LinearLayout layout = new LinearLayout(this.Context);
                 layout.LayoutParameters = new LayoutParams((int)this.Context.ToPixels(xfView.WidthRequest), (int)this.Context.ToPixels(xfView.HeightRequest));
@@ -1729,7 +1735,7 @@ namespace Iratrips.Mapkit.Droid
             }
         }
 
-        public void AnimateMarkerPosition(TKCustomMapPin pin, Position newPosition)
+        public void AnimateMarkerPosition(TKCustomMapPin pin, Location newPosition)
         {
             if (!_markers.TryGetValue(pin, out var marker))
                 return;
@@ -1737,7 +1743,7 @@ namespace Iratrips.Mapkit.Droid
             marker.AnimateMarkerPosition(newPosition);
         }
 
-        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Position currentPosition, List<Position> nextPositions)
+        public void AnimateMarkerPosition(TKCustomMapPin pin, double speed, Location currentPosition, List<Location> nextPositions)
         {
             if (!_markers.TryGetValue(pin, out var marker))
                 return;

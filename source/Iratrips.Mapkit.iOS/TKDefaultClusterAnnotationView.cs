@@ -3,6 +3,7 @@ using MapKit;
 using System.Linq;
 using UIKit;
 using Xamarin.iOS.ClusterKit;
+using Microsoft.Maui.Devices.Sensors;
 
 namespace Iratrips.Mapkit.iOS
 {

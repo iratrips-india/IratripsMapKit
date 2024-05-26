@@ -18,7 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Xamarin.Forms.Shapes;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace Iratrips.Mapkit.Utilities
 {

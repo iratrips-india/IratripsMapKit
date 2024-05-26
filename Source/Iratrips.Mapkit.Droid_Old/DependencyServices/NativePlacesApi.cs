@@ -72,7 +72,7 @@ namespace Iratrips.Mapkit.Droid
         {
             if(_apiClient == null)
             {
-                _apiClient = new GoogleApiClient.Builder(Microsoft.Maui.ApplicationModel.Platform.AppContext)
+                _apiClient = new GoogleApiClient.Builder(Forms.Context)
                     .AddApi(PlacesClass.GEO_DATA_API)
                     .Build();
             }

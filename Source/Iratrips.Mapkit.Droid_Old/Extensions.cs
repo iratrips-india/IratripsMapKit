@@ -1,12 +1,17 @@
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
-using Iratrips.Mapkit.Api.Google;
 using Iratrips.Mapkit.Overlays;
+using Iratrips.Mapkit.Api.Google;
 using Iratrips.Mapkit.Utilities;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using System;
+using Point = Android.Graphics.Point;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Devices.Sensors;
 
 namespace Iratrips.Mapkit.Droid
 {
@@ -20,16 +25,16 @@ namespace Iratrips.Mapkit.Droid
         /// </summary>
         /// <param name="self">Self instance</param>
         /// <returns>Forms Position</returns>
-        public static Position ToPosition(this LatLng self)
+        public static Location ToPosition(this LatLng self)
         {
-            return new Position(self.Latitude, self.Longitude);
+            return new Location(self.Latitude, self.Longitude);
         }
         /// <summary>
         /// Convert <see cref="Position" /> to <see cref="LatLng"/>
         /// </summary>
         /// <param name="self">Self instance</param>
         /// <returns>Android Position</returns>
-        public static LatLng ToLatLng(this Position self)
+        public static LatLng ToLatLng(this Location self)
         {
             return new LatLng(self.Latitude, self.Longitude);
         }
@@ -74,13 +79,13 @@ namespace Iratrips.Mapkit.Droid
             return null;
         }
         /// <summary>
-        /// Convert a <see cref="Point"/> to <see cref="Android.Graphics.Point"/>
+        /// Convert a <see cref="Xamarin.Forms.Point"/> to <see cref="Android.Graphics.Point"/>
         /// </summary>
         /// <param name="point">Self</param>
         /// <returns>A Android point</returns>
-        public static Android.Graphics.Point ToAndroidPoint(this Microsoft.Maui.Graphics.Point point)
+        public static Point ToAndroidPoint(this Xamarin.Forms.Point point)
         {
-            return new Android.Graphics.Point((int)point.X, (int)point.Y);
+            return new Point((int)point.X, (int)point.Y);
         }
         /// <summary>
         /// Converts a <see cref="MapSpan"/> to a <see cref="LatLngBounds"/>

@@ -3,13 +3,15 @@ using CoreLocation;
 using MapKit;
 using Iratrips.Mapkit.Overlays;
 using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
 using CoreGraphics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.iOS.ClusterKit;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace Iratrips.Mapkit.iOS
 {

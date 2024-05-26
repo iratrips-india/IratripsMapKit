@@ -6,7 +6,9 @@ using Foundation;
 using MapKit;
 using Iratrips.Mapkit.Api;
 using Iratrips.Mapkit.iOS;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Devices.Sensors;
 
 [assembly: Dependency(typeof(TKNativePlacesApi))]
 

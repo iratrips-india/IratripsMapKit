@@ -5,13 +5,11 @@ using System.Windows.Input;
 using Iratrips.Mapkit.Interfaces;
 using Iratrips.Mapkit.Models;
 using Iratrips.Mapkit.Overlays;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace Iratrips.Mapkit
 {
-    /// <summary>
-    /// An extensions of the <see cref="Xamarin.Forms.Maps.Map"/>
-    /// </summary>
     public class TKCustomMap : View, IMapFunctions
     {
         /// <summary>
@@ -248,23 +246,9 @@ namespace Iratrips.Mapkit
         /// </summary>
         public static readonly BindableProperty GetCalloutViewProperty = BindableProperty.Create(
             nameof(GetCalloutView),
-            typeof(Func<TKCustomMapPin, Xamarin.Forms.View>),
+            typeof(Func<TKCustomMapPin, View>),
             typeof(TKCustomMap));
-        /// <summary>
-        /// Bindable Property of <see cref="GetClusteredPin"/>
-        /// </summary>
-        public static readonly BindableProperty GetClusteredPinProperty = BindableProperty.Create(
-            nameof(GetClusteredPin),
-            typeof(Func<string, IEnumerable<TKCustomMapPin>, TKCustomMapPin>),
-            typeof(TKCustomMap));
-        /// <summary>
-        /// Bindable property of <see cref="IsClusteringEnabled"/>
-        /// </summary>
-        public static BindableProperty IsClusteringEnabledProperty = BindableProperty.Create(
-            nameof(IsClusteringEnabled),
-            typeof(bool),
-            typeof(TKCustomMap),
-            true);
+
         /// <summary>
         /// Binadble property of <see cref="MapType"/>
         /// </summary>
@@ -557,27 +541,12 @@ namespace Iratrips.Mapkit
         /// <summary>
         /// Gets/Sets function to retrieve a callout view. 
         /// </summary>
-        public Func<TKCustomMapPin, Xamarin.Forms.View> GetCalloutView
+        public Func<TKCustomMapPin, View> GetCalloutView
         {
-            get => (Func<TKCustomMapPin, Xamarin.Forms.View>)GetValue(GetCalloutViewProperty);
+            get => (Func<TKCustomMapPin, View>)GetValue(GetCalloutViewProperty);
             set => SetValue(GetCalloutViewProperty, value);
         }
-        /// <summary>
-        /// Gets/Sets function to retrieve a pin for clustering. You receive the group name and all pins getting clustered. 
-        /// </summary>
-        public Func<string, IEnumerable<TKCustomMapPin>, TKCustomMapPin> GetClusteredPin
-        {
-            get => (Func<string, IEnumerable<TKCustomMapPin>, TKCustomMapPin>)GetValue(GetClusteredPinProperty);
-            set => SetValue(GetClusteredPinProperty, value);
-        }
-        /// <summary>
-        /// Gets/Sets whether clustering is enabled or not
-        /// </summary>
-        public bool IsClusteringEnabled
-        {
-            get => (bool)GetValue(IsClusteringEnabledProperty);
-            set => SetValue(IsClusteringEnabledProperty, value);
-        }
+
         /// <summary>
         /// Creates a new instance of <c>MKCustomMap</c>
         /// </summary>
@@ -684,7 +653,7 @@ namespace Iratrips.Mapkit
         /// </summary>
         /// <param name="screenLocations">The screen locations(pixel)</param>
         /// <returns>A collection of <see cref="Position"/></returns>
-        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Point[] screenLocations) => MapFunctions.ScreenLocationsToGeocoordinates(screenLocations);
+        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Microsoft.Maui.Graphics.Point[] screenLocations) => MapFunctions.ScreenLocationsToGeocoordinates(screenLocations);
 
         /// <summary>
         /// Manually cleanup the platform renderer.

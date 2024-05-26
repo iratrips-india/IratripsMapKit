@@ -15,13 +15,18 @@ using Iratrips.Mapkit.Interfaces;
 using Iratrips.Mapkit.Models;
 using Iratrips.Mapkit.Overlays;
 using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
 using System.Collections;
 using Xamarin.iOS.ClusterKit;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.ApplicationModel;
 // ReSharper disable InconsistentNaming
 // ReSharper disable SuspiciousTypeConversion.Global
 
+// TODO Xamarin.Forms.ExportRendererAttribute is not longer supported. For more details see https://github.com/dotnet/maui/wiki/Using-Custom-Renderers-in-.NET-MAUI
 [assembly: ExportRenderer(typeof(TKCustomMap), typeof(TKCustomMapRenderer))]
 
 namespace Iratrips.Mapkit.iOS
@@ -577,7 +582,7 @@ namespace Iratrips.Mapkit.iOS
                 {
                     if (FormsMap.GetCalloutView != null)
                     {
-                        Xamarin.Forms.View xfView = FormsMap.GetCalloutView?.Invoke(customAnnotation.CustomPin);
+                        Microsoft.Maui.Controls.View xfView = FormsMap.GetCalloutView?.Invoke(customAnnotation.CustomPin);
 
                         var renderer = Xamarin.Forms.Platform.iOS.Platform.CreateRenderer(xfView);
                         var nativeView = renderer.NativeView;
@@ -1316,7 +1321,7 @@ namespace Iratrips.Mapkit.iOS
                         return;
                     }
 
-                    pinAnnotationView.PinTintColor = pin.DefaultPinColor != Color.Default
+                    pinAnnotationView.PinTintColor = pin.DefaultPinColor != null
                         ? pin.DefaultPinColor.ToUIColor()
                         : UIColor.Red;
                 }

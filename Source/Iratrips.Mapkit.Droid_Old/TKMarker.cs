@@ -2,22 +2,27 @@
 using Android.Content;
 using Android.Gms.Maps.Model;
 using Android.Gms.Maps.Utils;
-using Iratrips.Mapkit.Utilities;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Android.Gms.Maps.Utils.Clustering;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Iratrips.Mapkit.Utilities;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Devices.Sensors;
 
 namespace Iratrips.Mapkit.Droid
 {
     /// <summary>
     /// Internal Marker extension class for clustering
     /// </summary>
-    internal class TKMarker : Java.Lang.Object
+    internal class TKMarker : Java.Lang.Object, IClusterItem
     {
         private ValueAnimator _pinAnimator;
         private double? _currentSpeed = null;
         private int _furtherPointIndex = -1;
-        private List<Position> _furtherPoints = null;
+        private List<Location> _furtherPoints = null;
         private PinAnimatorUpdateListener _pinAnimatorUpdateListener = null;
         private AnimatorListener _animatorListener = null;
         private double? _lastGap = null;
@@ -59,7 +64,7 @@ namespace Iratrips.Mapkit.Droid
         /// <param name="e">Event arguments</param>
         /// <param name="isDragging">If the pin is dragging or not</param>
         /// <returns>Task</returns>
-        public System.Threading.Tasks.Task HandlePropertyChangedAsync(PropertyChangedEventArgs e, bool isDragging)
+        public Task HandlePropertyChangedAsync(PropertyChangedEventArgs e, bool isDragging)
         {
             switch (e.PropertyName)
             {
@@ -113,7 +118,7 @@ namespace Iratrips.Mapkit.Droid
                     break;
             }
 
-            return System.Threading.Tasks.Task.CompletedTask;
+            return Task.CompletedTask;
         }
         /// <summary>
         /// initializes the <see cref="MarkerOptions"/>
@@ -157,8 +162,16 @@ namespace Iratrips.Mapkit.Droid
                 }
                 else
                 {
-                    var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
-                    bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
+                    // TODO Xamarin.Forms.Color.Default is not longer supported. For more details see https://learn.microsoft.com/en-us/dotnet/maui/migration/forms-projects#color-changes
+                    if (Pin.DefaultPinColor != Xamarin.Forms.Color.Default)
+                    {
+                        var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
+                        bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
+                    }
+                    else
+                    {
+                        bitmap = BitmapDescriptorFactory.DefaultMarker();
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -185,8 +198,16 @@ namespace Iratrips.Mapkit.Droid
                 }
                 else
                 {
-                    var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
-                    bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
+                    // TODO Xamarin.Forms.Color.Default is not longer supported. For more details see https://learn.microsoft.com/en-us/dotnet/maui/migration/forms-projects#color-changes
+                    if (Pin.DefaultPinColor != Xamarin.Forms.Color.Default)
+                    {
+                        var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
+                        bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
+                    }
+                    else
+                    {
+                        bitmap = BitmapDescriptorFactory.DefaultMarker();
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -214,7 +235,7 @@ namespace Iratrips.Mapkit.Droid
         }
 
 
-        public void AnimateMarkerPosition(Position newPosition)
+        public void AnimateMarkerPosition(Location newPosition)
         {
             CancelAnimation();
             InitAnimation();
@@ -254,7 +275,7 @@ namespace Iratrips.Mapkit.Droid
             }
         }
 
-        public void AnimateMarkerPosition(double? speed, Position currentPosition, List<Position> furtherPoints)
+        public void AnimateMarkerPosition(double? speed, Location currentPosition, List<Location> furtherPoints)
         {
             CancelAnimation();
             if (speed <= 0 || furtherPoints == null || furtherPoints.Count == 0)
@@ -299,7 +320,7 @@ namespace Iratrips.Mapkit.Droid
                 AnimateToNextPosition(currentPosition);
         }
 
-        public void AnimateToNextPosition(Position currentPosition, double? actualDistanceEx = null)
+        public void AnimateToNextPosition(Location currentPosition, double? actualDistanceEx = null)
         {
             while (true)
             {
@@ -380,7 +401,7 @@ namespace Iratrips.Mapkit.Droid
                 _marker = marker;
             }
 
-            public Position InitialPosition { get; set; }
+            public Location InitialPosition { get; set; }
             public double TotalDistance { get; set; }
             public double CurrentBearing { get; set; }
 
@@ -405,7 +426,7 @@ namespace Iratrips.Mapkit.Droid
         {
             private TKMarker _marker;
 
-            public Position EndPosition { get; set; }
+            public Location EndPosition { get; set; }
 
             public AnimatorListener(TKMarker marker)
             {
@@ -439,7 +460,7 @@ namespace Iratrips.Mapkit.Droid
             }
         }
 
-        public int LocationIndexOnLine(Position point, List<Position> polyLine)
+        public int LocationIndexOnLine(Location point, List<Location> polyLine)
         {
             int edgeIndex = GmsPolyUtil.LocationIndexOnPath(point, polyLine, true, true, 1, 0);
             if (edgeIndex >= 0)

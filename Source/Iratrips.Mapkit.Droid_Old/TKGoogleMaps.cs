@@ -28,7 +28,7 @@ namespace Iratrips.Mapkit.Droid
 
             Context = activity;
 
-            TKCustomMapHandler.Bundle = bundle;
+            TKCustomMapRenderer.Bundle = bundle;
 
 #pragma warning disable 618
             if (GooglePlayServicesUtil.IsGooglePlayServicesAvailable(Context) == ConnectionResult.Success)
