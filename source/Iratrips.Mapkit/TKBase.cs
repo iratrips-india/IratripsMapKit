@@ -1,37 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
+﻿using Microsoft.Maui.Controls;
 
 namespace Iratrips.Mapkit
 {
-    /// <summary>
-    /// Base class handling property changed
-    /// </summary>
-    public class TKBase : BindableObject
+    public partial class TKBase : BindableObject
     {
-
-        /// <summary>
-        /// Changes the field value if not equal
-        /// </summary>
-        /// <typeparam name="T">Type of the field</typeparam>
-        /// <param name="field">The field as reference</param>
-        /// <param name="value">The new value</param>
-        /// <param name="propertyName">Name of the property</param>
-        /// <returns>True if value changed</returns>
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName]string propertyName = null)
+        private partial void InvokedOnPropertyChanged(string propertyName)
         {
-            if (field != null)
-            {
-                if (EqualityComparer<T>.Default.Equals(field, value))
-                {
-                    return false;
-                }
-            }
-            field = value;
             OnPropertyChanged(propertyName);
-            return true;
         }
     }
 }

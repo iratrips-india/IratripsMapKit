@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Iratrips.Mapkit.Interfaces;
+﻿using Iratrips.Mapkit.Interfaces;
 using Iratrips.Mapkit.Models;
 using Iratrips.Mapkit.Overlays;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Iratrips.Mapkit
 {
-    public class TKCustomMap : View, IMapFunctions
+    public partial class TKCustomMap : View, IMapFunctions
     {
         /// <summary>
         /// Event raised when a pin gets selected
@@ -253,9 +252,9 @@ namespace Iratrips.Mapkit
         /// Binadble property of <see cref="MapType"/>
         /// </summary>
         public static readonly BindableProperty MapTypeProperty = BindableProperty.Create(
-            nameof(MapType), 
-            typeof(MapType), 
-            typeof(TKCustomMap), 
+            nameof(MapType),
+            typeof(MapType),
+            typeof(TKCustomMap),
             default(MapType));
         /// <summary>
         /// Binadble property of <see cref="IsShowingUser"/>
@@ -269,7 +268,7 @@ namespace Iratrips.Mapkit
         /// Binadble property of <see cref="HasScrollEnabled"/>
         /// </summary>
         public static readonly BindableProperty HasScrollEnabledProperty = BindableProperty.Create(
-            nameof(HasScrollEnabled), 
+            nameof(HasScrollEnabled),
             typeof(bool),
             typeof(TKCustomMap),
             true);
@@ -277,9 +276,9 @@ namespace Iratrips.Mapkit
         /// Binadble property of <see cref="HasZoomEnabled"/>
         /// </summary>
         public static readonly BindableProperty HasZoomEnabledProperty = BindableProperty.Create(
-            nameof(HasZoomEnabled), 
-            typeof(bool), 
-            typeof(TKCustomMap), 
+            nameof(HasZoomEnabled),
+            typeof(bool),
+            typeof(TKCustomMap),
             true);
         /// <summary>
         /// Binadble property of <see cref="MapReadyCommand"/>
@@ -528,7 +527,7 @@ namespace Iratrips.Mapkit
         public IRendererFunctions MapFunctions
         {
             get => (IRendererFunctions)GetValue(MapFunctionsProperty);
-             set => SetValue(MapFunctionsPropertyKey, value);
+            set => SetValue(MapFunctionsPropertyKey, value);
         }
         /// <summary>
         /// Gets/Sets if traffic information should be displayed
@@ -550,8 +549,8 @@ namespace Iratrips.Mapkit
         /// <summary>
         /// Creates a new instance of <c>MKCustomMap</c>
         /// </summary>
-        public TKCustomMap() 
-            : base() 
+        public TKCustomMap()
+            : base()
         {
             MapRegion = MapSpan.FromCenterAndRadius(new Position(40.7142700, -74.0059700), Distance.FromKilometers(2));
         }
@@ -569,7 +568,7 @@ namespace Iratrips.Mapkit
         /// <param name="initialLatitude">The initial latitude value</param>
         /// <param name="initialLongitude">The initial longitude value</param>
         /// <param name="distanceInKilometers">The initial zoom distance in kilometers</param>
-        public TKCustomMap(double initialLatitude, double initialLongitude, double distanceInKilometers) : 
+        public TKCustomMap(double initialLatitude, double initialLongitude, double distanceInKilometers) :
             this(MapSpan.FromCenterAndRadius(new Position(initialLatitude, initialLongitude), Distance.FromKilometers(distanceInKilometers)))
         {
         }
@@ -653,12 +652,12 @@ namespace Iratrips.Mapkit
         /// </summary>
         /// <param name="screenLocations">The screen locations(pixel)</param>
         /// <returns>A collection of <see cref="Position"/></returns>
-        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Microsoft.Maui.Graphics.Point[] screenLocations) => MapFunctions.ScreenLocationsToGeocoordinates(screenLocations);
+        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params TKPoint[] screenLocations) => MapFunctions.ScreenLocationsToGeocoordinates(screenLocations);
 
         /// <summary>
         /// Manually cleanup the platform renderer.
         /// </summary>
-        public void CleanUp() => MapFunctions.CleanUp();
+        public void CleanUp() => MapFunctions?.CleanUp();
 
         /// <summary>
         /// Raises <see cref="PinSelected"/>
@@ -804,7 +803,7 @@ namespace Iratrips.Mapkit
         /// <param name="parameter">Addition command parameter</param>
         void RaiseCommand(ICommand command, object parameter)
         {
-            if(command != null && command.CanExecute(parameter))
+            if (command != null && command.CanExecute(parameter))
             {
                 command.Execute(parameter);
             }
@@ -838,7 +837,7 @@ namespace Iratrips.Mapkit
         void IMapFunctions.RaiseCalloutClicked(TKCustomMapPin pin) => OnCalloutClicked(pin);
         /// <inheritdoc/>
         void IMapFunctions.RaiseMapReady() => OnMapReady();
-        
+
         /// <inheritdoc/>
         void IMapFunctions.RaiseCameraIdeal() => OnCameraIdeal();
 

@@ -6,7 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iratrips.Mapkit", "Iratrips
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iratrips.Mapkit.iOS", "Iratrips.Mapkit.iOS\Iratrips.Mapkit.iOS.csproj", "{3B07CB76-447D-47CD-8791-5FA66FDC45BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iratrips.Mapkit.Droid", "Iratrips.Mapkit.Droid\Iratrips.Mapkit.Droid.csproj", "{D2D925EA-AD6F-4B1C-A43A-843BE45D28AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iratrips.Mapkit.Droid", "Iratrips.Mapkit.Droid\Iratrips.Mapkit.Droid.csproj", "{D2D925EA-AD6F-4B1C-A43A-843BE45D28AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iratrips.Mapkit.Razor", "Iratrips.Mapkit.Razor\Iratrips.Mapkit.Razor.csproj", "{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Iratrips.Mapkit.Core", "Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.shproj", "{75743FB4-BEDC-4A63-A5E3-B5FFEC0E30EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,11 +58,28 @@ Global
 		{D2D925EA-AD6F-4B1C-A43A-843BE45D28AE}.Release|iPhone.Build.0 = Release|Any CPU
 		{D2D925EA-AD6F-4B1C-A43A-843BE45D28AE}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{D2D925EA-AD6F-4B1C-A43A-843BE45D28AE}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|iPhone.Build.0 = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F9CA07DD-94E2-42F6-BAD5-356B76B61D00}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A032C8DD-3A15-40A7-8BF1-F59B63B9857B}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.projitems*{257c1d6e-d760-4f34-8a5f-4957b301e7b3}*SharedItemsImports = 5
+		Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.projitems*{75743fb4-bedc-4a63-a5e3-b5ffec0e30eb}*SharedItemsImports = 13
+		Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.projitems*{f9ca07dd-94e2-42f6-bad5-356b76b61d00}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

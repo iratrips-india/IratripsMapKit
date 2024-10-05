@@ -1,16 +1,23 @@
 using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
+using Android.Gms.Maps.Utils;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
+using Android.Util;
 using Android.Widget;
 using Iratrips.Mapkit;
 using Iratrips.Mapkit.Api.Google;
-using Iratrips.Mapkit.Droid;
 using Iratrips.Mapkit.Interfaces;
 using Iratrips.Mapkit.Models;
 using Iratrips.Mapkit.Overlays;
 using Iratrips.Mapkit.Utilities;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Platform;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,22 +26,34 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls.Handlers.Compatibility;
-using Microsoft.Maui.Controls.Platform;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
-using Microsoft.Maui.Devices.Sensors;
-using Microsoft.Maui.Graphics;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Handlers;
-using Android.Util;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
-using Android.Gms.Maps.Utils;
-using Microsoft.Maui.Platform;
-using Android.Runtime;
 
 namespace Iratrips.Mapkit.Droid
 {
+    public class IratripsMapView : MapView
+    {
+        private Action _onLayoutAction;
+        private bool _isLayoutPerformed = false;
+
+        public IratripsMapView(Action onLayoutAction, Context context) : base(context)
+        {
+            _onLayoutAction = onLayoutAction;
+        }
+
+        ///<inheritdoc/>
+        protected override void OnLayout(bool changed, int l, int t, int r, int b)
+        {
+            base.OnLayout(changed, l, t, r, b);
+
+            if (!_isLayoutPerformed)
+            {
+                _isLayoutPerformed = true;
+                _onLayoutAction?.Invoke();
+                _onLayoutAction = null;
+            }
+        }
+
+    }
+
     public class TKCustomMapEventListener : Java.Lang.Object, GoogleMap.ISnapshotReadyCallback, GoogleMap.IOnCameraIdleListener,
         IOnMapReadyCallback, GoogleMap.IInfoWindowAdapter, GoogleMap.IOnCameraMoveStartedListener
     {
@@ -90,12 +109,12 @@ namespace Iratrips.Mapkit.Droid
     /// <summary>
     /// Android Map Handler of <see cref="Iratrips.Mapkit.TKCustomMap"/>
     /// </summary>
-    public class TKCustomMapHandler : ViewHandler<TKCustomMap, MapView>, IRendererFunctions, IDisposable
+    public class TKCustomMapHandler : ViewHandler<TKCustomMap, IratripsMapView>, IRendererFunctions, IDisposable
     {
         object _lockObj = new object();
 
         bool _isInitialized;
-        bool _isLayoutPerformed;
+        public bool _isLayoutPerformed;
 
         readonly List<TKRoute> _tempRouteList = new List<TKRoute>();
 
@@ -119,9 +138,9 @@ namespace Iratrips.Mapkit.Droid
 
         GoogleMap Map => _googleMap;
 
-        protected override MapView CreatePlatformView()
+        protected override IratripsMapView CreatePlatformView()
         {
-            var mapView = new MapView(Context);
+            var mapView = new IratripsMapView(OnLayout, Context);
             mapView.OnCreate(s_bundle);
             mapView.OnResume();
             return mapView;
@@ -132,7 +151,16 @@ namespace Iratrips.Mapkit.Droid
 
         private TKCustomMapEventListener _listener = null;
 
-        protected override void ConnectHandler(MapView mapView)
+        void OnLayout()
+        {
+            _isLayoutPerformed = true;
+            _isInitialized = true;
+            
+            UpdateMapRegion();
+            MapFunctions?.RaiseMapReady();
+        }
+
+        protected override void ConnectHandler(IratripsMapView mapView)
         {
             base.ConnectHandler(mapView);
             if (!TKGoogleMaps.IsInitialized) throw new Exception("Call MKGoogleMaps.Init first");
@@ -140,17 +168,20 @@ namespace Iratrips.Mapkit.Droid
             lock (_lockObj)
             {
                 if (mapView == null) return;
-                
+
                 _listener?.CleanUp();
                 _listener = new TKCustomMapEventListener(this);
                 mapView.GetMapAsync(_listener);
+
+                this.VirtualView.MapFunctions = this;
             }
         }
 
-        protected override void DisconnectHandler(MapView platformView)
+        protected override void DisconnectHandler(IratripsMapView platformView)
         {
             base.DisconnectHandler(platformView);
             UnregisterCollections();
+            this.VirtualView.MapFunctions = null;
 
             if (_googleMap != null)
             {
@@ -209,21 +240,6 @@ namespace Iratrips.Mapkit.Droid
                 UpdateHasScrollEnabled();
             }
         }
-
-        /////<inheritdoc/>
-        //protected override void OnLayout(bool changed, int l, int t, int r, int b)
-        //{
-        //    base.OnLayout(changed, l, t, r, b);
-
-        //    if (!_isLayoutPerformed)
-        //    {
-        //        _isLayoutPerformed = true;
-        //        UpdateMapRegion();
-        //        _isInitialized = true;
-
-        //        MapFunctions?.RaiseMapReady();
-        //    }
-        //}
 
         public void Dispose()
         {
@@ -659,7 +675,7 @@ namespace Iratrips.Mapkit.Droid
             }
             else if (e.PropertyName == nameof(TKPolyline.Color))
             {
-                _polylines[line].Color = line.Color.ToAndroid().ToArgb();
+                _polylines[line].Color = line.Color.ToMaui().ToAndroid().ToArgb();
             }
             else if (e.PropertyName == nameof(TKPolyline.LineWidth))
             {
@@ -827,7 +843,7 @@ namespace Iratrips.Mapkit.Droid
                 }
             }
         }
-        
+
         /// <summary>
         /// Creates the polygones on the map
         /// </summary>
@@ -925,7 +941,7 @@ namespace Iratrips.Mapkit.Droid
                 UpdateRoutes(false);
             }
         }
-        
+
         /// <summary>
         /// When a property of a route changed
         /// </summary>
@@ -947,7 +963,7 @@ namespace Iratrips.Mapkit.Droid
             }
             else if (e.PropertyName == nameof(TKPolyline.Color))
             {
-                _routes[route].Color = route.Color.ToAndroid().ToArgb();
+                _routes[route].Color = route.Color.ToMaui().ToAndroid().ToArgb();
             }
             else if (e.PropertyName == nameof(TKPolyline.LineWidth))
             {
@@ -986,7 +1002,7 @@ namespace Iratrips.Mapkit.Droid
                 UpdatePolygons(false);
             }
         }
-        
+
         /// <summary>
         /// Adds a polygon to the map
         /// </summary>
@@ -1003,11 +1019,11 @@ namespace Iratrips.Mapkit.Droid
             }
             if (polygon.Color != null)
             {
-                polygonOptions.InvokeFillColor(polygon.Color.ToAndroid().ToArgb());
+                polygonOptions.InvokeFillColor(polygon.Color.ToMaui().ToAndroid().ToArgb());
             }
             if (polygon.StrokeColor != null)
             {
-                polygonOptions.InvokeStrokeColor(polygon.StrokeColor.ToAndroid().ToArgb());
+                polygonOptions.InvokeStrokeColor(polygon.StrokeColor.ToMaui().ToAndroid().ToArgb());
             }
             polygonOptions.InvokeStrokeWidth(polygon.StrokeWidth);
 
@@ -1029,17 +1045,17 @@ namespace Iratrips.Mapkit.Droid
                     _polygons[tkPolygon].Points = tkPolygon.Coordinates.Select(i => i.ToLatLng()).ToList();
                     break;
                 case nameof(TKPolygon.Color):
-                    _polygons[tkPolygon].FillColor = tkPolygon.Color.ToAndroid().ToArgb();
+                    _polygons[tkPolygon].FillColor = tkPolygon.Color.ToMaui().ToAndroid().ToArgb();
                     break;
                 case nameof(TKPolygon.StrokeColor):
-                    _polygons[tkPolygon].StrokeColor = tkPolygon.StrokeColor.ToAndroid().ToArgb();
+                    _polygons[tkPolygon].StrokeColor = tkPolygon.StrokeColor.ToMaui().ToAndroid().ToArgb();
                     break;
                 case nameof(TKPolygon.StrokeWidth):
                     _polygons[tkPolygon].StrokeWidth = tkPolygon.StrokeWidth;
                     break;
             }
         }
-        
+
         /// <summary>
         /// When the circle collection changed
         /// </summary>
@@ -1071,7 +1087,7 @@ namespace Iratrips.Mapkit.Droid
                 UpdateCircles(false);
             }
         }
-        
+
         /// <summary>
         /// Adds a circle to the map
         /// </summary>
@@ -1087,16 +1103,16 @@ namespace Iratrips.Mapkit.Droid
 
             if (circle.Color != null)
             {
-                circleOptions.InvokeFillColor(circle.Color.ToAndroid().ToArgb());
+                circleOptions.InvokeFillColor(circle.Color.ToMaui().ToAndroid().ToArgb());
             }
             if (circle.StrokeColor != null)
             {
-                circleOptions.InvokeStrokeColor(circle.StrokeColor.ToAndroid().ToArgb());
+                circleOptions.InvokeStrokeColor(circle.StrokeColor.ToMaui().ToAndroid().ToArgb());
             }
             circleOptions.InvokeStrokeWidth(circle.StrokeWidth);
             _circles.Add(circle, _googleMap.AddCircle(circleOptions));
         }
-        
+
         /// <summary>
         /// When a property of a <see cref="TKCircle"/> changed
         /// </summary>
@@ -1116,10 +1132,10 @@ namespace Iratrips.Mapkit.Droid
                     circle.Center = tkCircle.Center.ToLatLng();
                     break;
                 case nameof(TKCircle.Color):
-                    circle.FillColor = tkCircle.Color.ToAndroid().ToArgb();
+                    circle.FillColor = tkCircle.Color.ToMaui().ToAndroid().ToArgb();
                     break;
                 case nameof(TKCircle.StrokeColor):
-                    circle.StrokeColor = tkCircle.StrokeColor.ToAndroid().ToArgb();
+                    circle.StrokeColor = tkCircle.StrokeColor.ToMaui().ToAndroid().ToArgb();
                     break;
             }
         }
@@ -1135,7 +1151,7 @@ namespace Iratrips.Mapkit.Droid
             var polylineOptions = new PolylineOptions();
             if (line.Color != null)
             {
-                polylineOptions.InvokeColor(line.Color.ToAndroid().ToArgb());
+                polylineOptions.InvokeColor(line.Color.ToMaui().ToAndroid().ToArgb());
             }
             if (line.LineWidth > 0)
             {
@@ -1149,7 +1165,7 @@ namespace Iratrips.Mapkit.Droid
 
             _polylines.Add(line, _googleMap.AddPolyline(polylineOptions));
         }
-        
+
         /// <summary>
         /// Calculates and adds the route to the map
         /// </summary>
@@ -1193,7 +1209,7 @@ namespace Iratrips.Mapkit.Droid
 
                 if (route.Color != null)
                 {
-                    routeOptions.InvokeColor(route.Color.ToAndroid().ToArgb());
+                    routeOptions.InvokeColor(route.Color.ToMaui().ToAndroid().ToArgb());
                 }
                 if (route.LineWidth > 0)
                 {
@@ -1276,13 +1292,13 @@ namespace Iratrips.Mapkit.Droid
             {
                 if (pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToBitmap(Context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToMaui().ToBitmap(Context));
                 }
                 else
                 {
                     if (pin.DefaultPinColor != null)
                     {
-                        var hue = pin.DefaultPinColor.ToAndroid().GetHue();
+                        var hue = pin.DefaultPinColor.ToMaui().ToAndroid().GetHue();
                         bitmap = BitmapDescriptorFactory.DefaultMarker(Math.Min(hue, 359.99f));
                     }
                     else
@@ -1312,13 +1328,13 @@ namespace Iratrips.Mapkit.Droid
             {
                 if (pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToBitmap(Context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(pin.Image.ToMaui().ToBitmap(Context));
                 }
                 else
                 {
                     if (pin.DefaultPinColor != null)
                     {
-                        var hue = pin.DefaultPinColor.ToAndroid().GetHue();
+                        var hue = pin.DefaultPinColor.ToMaui().ToAndroid().GetHue();
                         bitmap = BitmapDescriptorFactory.DefaultMarker(hue);
                     }
                     else
@@ -1373,7 +1389,7 @@ namespace Iratrips.Mapkit.Droid
                 MoveToMapRegion(VirtualMap.MapRegion, VirtualMap.IsRegionChangeAnimated);
             }
         }
-        
+
         /// <summary>
         /// Sets traffic enabled on the google map
         /// </summary>
@@ -1383,7 +1399,7 @@ namespace Iratrips.Mapkit.Droid
 
             _googleMap.TrafficEnabled = VirtualMap.ShowTraffic;
         }
-        
+
         /// <summary>
         /// Updates the map type
         /// </summary>
@@ -1526,7 +1542,7 @@ namespace Iratrips.Mapkit.Droid
 
             return _snapShot;
         }
-        
+
         ///<inheritdoc/>
         public void OnSnapshotReady(Bitmap snapshot)
         {
@@ -1536,7 +1552,7 @@ namespace Iratrips.Mapkit.Droid
                 _snapShot = strm.ToArray();
             }
         }
-        
+
         ///<inheritdoc/>
         public void FitMapRegionToPositions(IEnumerable<Position> positions, bool animate = false, int padding = 0)
         {
@@ -1552,7 +1568,7 @@ namespace Iratrips.Mapkit.Droid
             else
                 _googleMap.MoveCamera(CameraUpdateFactory.NewLatLngBounds(builder.Build(), padding));
         }
-        
+
         ///<inheritdoc/>
         public void MoveToMapRegion(MapSpan region, bool animate)
         {
@@ -1674,12 +1690,12 @@ namespace Iratrips.Mapkit.Droid
         }
 
         ///<inheritdoc/>
-        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params Microsoft.Maui.Graphics.Point[] screenLocations)
+        public IEnumerable<Position> ScreenLocationsToGeocoordinates(params TKPoint[] screenLocations)
         {
             if (_googleMap == null)
                 throw new InvalidOperationException("Map not initialized");
 
-            return screenLocations.Select(i => _googleMap.Projection.FromScreenLocation(i.ToAndroidPoint()).ToPosition());
+            return screenLocations.Select(i => _googleMap.Projection.FromScreenLocation(i.ToMaui().ToAndroidPoint()).ToPosition());
         }
 
         /// <summary>

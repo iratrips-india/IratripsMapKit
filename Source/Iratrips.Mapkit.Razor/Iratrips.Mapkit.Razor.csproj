@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);BLAZOR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);BLAZOR</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Component2.razor" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.5" />
+  </ItemGroup>
+
+  <Import Project="..\Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Component2.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Component2.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Component2.razor" />
+  </ItemGroup>
+
+</Project>

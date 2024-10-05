@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>75743fb4-bedc-4a63-a5e3-b5ffec0e30eb</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Iratrips.Mapkit.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionResultBounds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionResultLeg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionResultLegStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionResultStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsDirectionTravelMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsLocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsPolyline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsRouteResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GmsTextValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\GmsDirection\GooglePoints.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsDetailsResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsDetailsResultItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsDetailsResultStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsPlace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsPlacePrediction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\Google\Places\GmsPlaceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\IPlaceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\NativePlacesApi\NativeAndroidPlaceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\NativePlacesApi\NativeiOSPlaceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\NativePlacesApi\PlaceDetails.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\OSM\OsmNominatim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Api\OSM\OsmNominatimResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Distance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\GenericEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IMapFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRendererFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MapSpan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MapType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RouteCalculationError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\IRouteFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\IRouteStepFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKCircle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKOverlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKPolygon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKPolyline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKRoute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKRouteStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKRouteTravelMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Overlays\TKTileUrlOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Position.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\TKColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\TKImageSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\TKPoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TKBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TKCallout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TKCustomMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TKCustomMapPin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TKRoutePosition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\GmsMathUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\GmsPolyUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\GmsSphericalUtil.cs" />
+  </ItemGroup>
+</Project>

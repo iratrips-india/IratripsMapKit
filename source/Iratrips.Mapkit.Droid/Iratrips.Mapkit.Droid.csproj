@@ -1,15 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-android</TargetFramework>
     <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
     <Nullable>disable</Nullable>
+    <UseMaui>True</UseMaui>
     <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Google.Maps.Utils" Version="1.3.5" />
+    <PackageReference Include="Xamarin.Google.Maps.Utils" Version="1.3.8" />
     <PackageReference Include="Xamarin.GooglePlayServices.Places" Version="117.0.0.15" />
   </ItemGroup>
-  <ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
+		<PackageReference Include="System.Text.Json" Version="8.0.3" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
     <ProjectReference Include="..\Iratrips.Mapkit\Iratrips.Mapkit.csproj" />
   </ItemGroup>
 </Project>

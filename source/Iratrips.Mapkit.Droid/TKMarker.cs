@@ -153,11 +153,11 @@ namespace Iratrips.Mapkit.Droid
             {
                 if (Pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToBitmap(_context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToMaui().ToBitmap(_context));
                 }
                 else
                 {
-                    var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
+                    var hue = Pin.DefaultPinColor.ToMaui().ToAndroid().GetHue();
                     bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
                 }
             }
@@ -181,11 +181,11 @@ namespace Iratrips.Mapkit.Droid
             {
                 if (Pin.Image != null)
                 {
-                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToBitmap(_context));
+                    bitmap = BitmapDescriptorFactory.FromBitmap(Pin.Image.ToMaui().ToBitmap(_context));
                 }
                 else
                 {
-                    var hue = Pin.DefaultPinColor.ToAndroid().GetHue();
+                    var hue = Pin.DefaultPinColor.ToMaui().ToAndroid().GetHue();
                     bitmap = BitmapDescriptorFactory.DefaultMarker(System.Math.Min(hue, 359.99f));
                 }
             }
