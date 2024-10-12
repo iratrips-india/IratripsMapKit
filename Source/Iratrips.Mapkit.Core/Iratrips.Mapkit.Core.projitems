@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Distance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventArguments\GenericEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICalloutView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IMapFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRendererFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MapSpan.cs" />

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Iratrips.Mapkit</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,10 +14,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>$(DefineConstants);BLAZOR</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="Component2.razor" />
-  </ItemGroup>
 
 
   <ItemGroup>
@@ -28,17 +25,5 @@
   </ItemGroup>
 
   <Import Project="..\Iratrips.Mapkit.Core\Iratrips.Mapkit.Core.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Component2.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Component2.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Component2.razor" />
-  </ItemGroup>
 
 </Project>

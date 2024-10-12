@@ -9,14 +9,14 @@ namespace Iratrips.Mapkit.Razor
     // This class can be registered as scoped DI service and then injected into Blazor
     // components for use.
 
-    public class ExampleJsInterop : IAsyncDisposable
+    public class MapJsInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
-        public ExampleJsInterop(IJSRuntime jsRuntime)
+        public MapJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/Iratrips.Mapkit.Razor/exampleJsInterop.js").AsTask());
+                "import", "./_content/Iratrips.Mapkit.Razor/mapJsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)
